@@ -18,8 +18,10 @@ Dim.BackgroundTransparency = 1
 Dim.BorderSizePixel = 0
 Dim.ZIndex = 1
 
-local dimTween = TweenService:Create(Dim, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.4})
-if dimTween then dimTween:Play() end
+pcall(function()
+    local dimTween = TweenService:Create(Dim, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.4})
+    if dimTween then dimTween:Play() end
+end)
 
 local Card = Instance.new("Frame", ScreenGui)
 Card.Name = "LoaderCard"
@@ -36,18 +38,13 @@ CardStroke.Thickness = 2
 CardStroke.Color = Color3.fromRGB(100, 80, 200)
 CardStroke.Transparency = 1
 
-local cardTween = TweenService:Create(Card, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -190, 0.5, -140), BackgroundTransparency = 0})
-if cardTween then cardTween:Play() end
-
-local strokeTween = TweenService:Create(CardStroke, TweenInfo.new(0.45), {Transparency = 0})
-if strokeTween then strokeTween:Play() end
-
-local TopBar = Instance.new("Frame", Card)
-TopBar.Size = UDim2.new(1, 0, 0, 5)
-TopBar.BackgroundColor3 = Color3.fromRGB(120, 90, 255)
-TopBar.BorderSizePixel = 0
-TopBar.ZIndex = 3
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 20)
+pcall(function()
+    local cardTween = TweenService:Create(Card, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -190, 0.5, -140), BackgroundTransparency = 0})
+    if cardTween then cardTween:Play() end
+    
+    local strokeTween = TweenService:Create(CardStroke, TweenInfo.new(0.45), {Transparency = 0})
+    if strokeTween then strokeTween:Play() end
+end)
 
 local DiamondContainer = Instance.new("Frame", Card)
 DiamondContainer.Size = UDim2.new(0, 80, 0, 80)
@@ -121,8 +118,10 @@ Instance.new("UICorner", Bar).CornerRadius = UDim.new(1, 0)
 local function setProgress(pct, msg, delay_)
     task.delay(delay_ or 0, function()
         if not Bar or not Bar.Parent then return end
-        local barTween = TweenService:Create(Bar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Size = UDim2.new(pct, 0, 1, 0)})
-        if barTween then barTween:Play() end
+        pcall(function()
+            local barTween = TweenService:Create(Bar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Size = UDim2.new(pct, 0, 1, 0)})
+            if barTween then barTween:Play() end
+        end)
         if StatusLabel and StatusLabel.Parent then
             StatusLabel.Text = msg
         end
@@ -136,14 +135,16 @@ setProgress(0.85, "Initializing environment...", 2.1)
 setProgress(1.00, "Ready! Launching Ecco Hub...", 2.7)
 
 task.delay(3.3, function()
-    local fadeOutCard = TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 1, Position = UDim2.new(0.5, -190, 0.45, -140)})
-    if fadeOutCard then fadeOutCard:Play() end
-    
-    local fadeOutStroke = TweenService:Create(CardStroke, TweenInfo.new(0.4), {Transparency = 1})
-    if fadeOutStroke then fadeOutStroke:Play() end
-    
-    local fadeOutDim = TweenService:Create(Dim, TweenInfo.new(0.4), {BackgroundTransparency = 1})
-    if fadeOutDim then fadeOutDim:Play() end
+    pcall(function()
+        local fadeOutCard = TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 1, Position = UDim2.new(0.5, -190, 0.45, -140)})
+        if fadeOutCard then fadeOutCard:Play() end
+        
+        local fadeOutStroke = TweenService:Create(CardStroke, TweenInfo.new(0.4), {Transparency = 1})
+        if fadeOutStroke then fadeOutStroke:Play() end
+        
+        local fadeOutDim = TweenService:Create(Dim, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+        if fadeOutDim then fadeOutDim:Play() end
+    end)
 
     task.wait(0.45)
     
@@ -151,11 +152,25 @@ task.delay(3.3, function()
         ScreenGui:Destroy()
     end
     
-    local ok, err = pcall(function()
-        loadstring(game:HttpGet("https://dpaste.com/BALNHG3T7.txt"))()
+    pcall(function()
+        if syn and syn.request then
+            local response = syn.request({
+                Url = "https://dpaste.com/BALNHG3T7.txt",
+                Method = "GET"
+            })
+            if response and response.Body then
+                loadstring(response.Body)()
+            end
+        elseif http and http.request then
+            local response = http.request({
+                Url = "https://dpaste.com/BALNHG3T7.txt",
+                Method = "GET"
+            })
+            if response and response.Body then
+                loadstring(response.Body)()
+            end
+        elseif game:HttpGet then
+            loadstring(game:HttpGet("https://dpaste.com/BALNHG3T7.txt"))()
+        end
     end)
-    
-    if not ok then
-        warn("[Ecco Hub] Launch Error: " .. tostring(err))
-    end
 end)
