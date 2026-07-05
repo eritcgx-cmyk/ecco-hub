@@ -1,43 +1,9 @@
 -- Ecco Hub - Sell Lemons | Encrypted Loader
--- Working encrypted loadstring with pre-encrypted hub
+-- Launches the main hub after loading animation
 
 local CoreGui      = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 local RunService   = game:GetService("RunService")
-
--- =========================================
--- Encryption/Decryption Functions
--- =========================================
-local function base64Decode(data)
-    local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    data = data:gsub("[^" .. b .. "=]", "")
-    return (data:gsub(".", function(x)
-        if x == "=" then return "" end
-        local r, f = "", b:find(x) - 1
-        for i = 6, 1, -1 do r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and "1" or "0") end
-        return r
-    end) .. "0000"):gsub("%d%d%d%d%d%d%d%d", function(x)
-        if #x < 8 then return "" end
-        local c = 0
-        for i = 1, 8 do c = c + c + (x:sub(i, i) == "1" and 1 or 0) end
-        return string.char(c)
-    end)
-end
-
-local function xorDecrypt(data, key)
-    local result = ""
-    for i = 1, #data do
-        local byte = string.byte(data, i)
-        local keyByte = string.byte(key, ((i - 1) % #key) + 1)
-        result = result .. string.char(bit32.bxor(byte, keyByte))
-    end
-    return result
-end
-
-local ENCRYPTION_KEY = "ecco_hub_security_key_2024"
-
--- Pre-encrypted hub script (fetched and encrypted on first run)
-local ENCRYPTED_HUB = ""
 
 -- =========================================
 -- Parent
@@ -259,7 +225,7 @@ setProgress(0.85, "Initializing environment...",        2.1)
 setProgress(1.00, "Ready! Launching Ecco Hub...",       2.7)
 
 -- =========================================
--- Load hub then destroy loader (with working encryption)
+-- Load hub then destroy loader
 -- =========================================
 task.delay(3.3, function()
     TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
@@ -275,45 +241,12 @@ task.delay(3.3, function()
         ScreenGui:Destroy()
     end
     
-    -- Direct encrypted loadstring execution
-    local encryptedLoader = [[
-local function base64Decode(data)
-    local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    data = data:gsub("[^" .. b .. "=]", "")
-    return (data:gsub(".", function(x)
-        if x == "=" then return "" end
-        local r, f = "", b:find(x) - 1
-        for i = 6, 1, -1 do r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and "1" or "0") end
-        return r
-    end) .. "0000"):gsub("%d%d%d%d%d%d%d%d", function(x)
-        if #x < 8 then return "" end
-        local c = 0
-        for i = 1, 8 do c = c + c + (x:sub(i, i) == "1" and 1 or 0) end
-        return string.char(c)
+    -- Launch the main hub loadstring
+    local ok, err = pcall(function()
+        loadstring(game:HttpGet("https://dpaste.com/BALNHG3T7.txt"))()
     end)
-end
-
-local function xorDecrypt(data, key)
-    local result = ""
-    for i = 1, #data do
-        local byte = string.byte(data, i)
-        local keyByte = string.byte(key, ((i - 1) % #key) + 1)
-        result = result .. string.char(bit32.bxor(byte, keyByte))
-    end
-    return result
-end
-
-local ENCRYPTION_KEY = "ecco_hub_security_key_2024"
-local encrypted = base64Decode("PUT_ENCRYPTED_DATA_HERE")
-local decrypted = xorDecrypt(encrypted, ENCRYPTION_KEY)
-loadstring(decrypted)()
-    ]]
     
-    -- Execute the encrypted loader
-    local execOk, execErr = pcall(function()
-        loadstring(encryptedLoader)()
-    end)
-    if not execOk then
-        warn("[Ecco Hub] Execution Error: " .. tostring(execErr))
+    if not ok then
+        warn("[Ecco Hub] Failed to launch hub: " .. tostring(err))
     end
 end)
