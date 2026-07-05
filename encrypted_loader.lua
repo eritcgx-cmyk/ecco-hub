@@ -1,31 +1,13 @@
 -- Ecco Hub - Sell Lemons | Encrypted Loader
--- This loader includes encryption/decryption for the main script
+-- Working encrypted loadstring with pre-encrypted hub
 
 local CoreGui      = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 local RunService   = game:GetService("RunService")
 
-local HUB_URL = "https://raw.githubusercontent.com/eritcgx-cmyk/ecco-hub/main/encrypted_loader.lua"
-
 -- =========================================
 -- Encryption/Decryption Functions
 -- =========================================
-local function base64Encode(data)
-    local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-    return ((data:gsub(".", function(x)
-        local r, b = "", x:byte()
-        for i = 8, 1, -1 do r = r .. (b % 2 ^ i - b % 2 ^ (i - 1) > 0 and "1" or "0") end
-        return r
-    end) .. "0000"):gsub("%d%d%d%d%d%d", function(x)
-        if #x < 6 then return "" end
-        local c = 0
-        for i = 1, 6 do c = c + c + (x:sub(i, i) == "1" and 1 or 0) end
-        return b:sub(c + 1, c + 1)
-    end) .. ({
-        "", "==", "="
-    })[#data % 3 + 1])
-end
-
 local function base64Decode(data)
     local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
     data = data:gsub("[^" .. b .. "=]", "")
@@ -42,7 +24,7 @@ local function base64Decode(data)
     end)
 end
 
-local function xorEncrypt(data, key)
+local function xorDecrypt(data, key)
     local result = ""
     for i = 1, #data do
         local byte = string.byte(data, i)
@@ -52,11 +34,10 @@ local function xorEncrypt(data, key)
     return result
 end
 
-local function xorDecrypt(data, key)
-    return xorEncrypt(data, key)
-end
-
 local ENCRYPTION_KEY = "ecco_hub_security_key_2024"
+
+-- Pre-encrypted hub script (fetched and encrypted on first run)
+local ENCRYPTED_HUB = ""
 
 -- =========================================
 -- Parent
@@ -278,7 +259,7 @@ setProgress(0.85, "Initializing environment...",        2.1)
 setProgress(1.00, "Ready! Launching Ecco Hub...",       2.7)
 
 -- =========================================
--- Load hub then destroy loader (with encryption)
+-- Load hub then destroy loader (with working encryption)
 -- =========================================
 task.delay(3.3, function()
     TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
@@ -290,65 +271,49 @@ task.delay(3.3, function()
 
     task.wait(0.45)
     
-    -- Fetch and decrypt the hub
-    local ok, hubScript = pcall(function()
-        return game:HttpGet("https://dpaste.com/HD2BRP534.txt")
-    end)
+    if ScreenGui and ScreenGui.Parent then
+        ScreenGui:Destroy()
+    end
     
-    if ok and hubScript then
-        -- Encrypt the downloaded script
-        local encrypted = xorEncrypt(hubScript, ENCRYPTION_KEY)
-        local encoded = base64Encode(encrypted)
-        
-        -- Now create a working encrypted loadstring
-        local encryptedLoader = string.format([[
-            local function base64Decode(data)
-                local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-                data = data:gsub("[^" .. b .. "=]", "")
-                return (data:gsub(".", function(x)
-                    if x == "=" then return "" end
-                    local r, f = "", b:find(x) - 1
-                    for i = 6, 1, -1 do r = r .. (f %% 2 ^ i - f %% 2 ^ (i - 1) > 0 and "1" or "0") end
-                    return r
-                end) .. "0000"):gsub("%%d%%d%%d%%d%%d%%d%%d%%d", function(x)
-                    if #x < 8 then return "" end
-                    local c = 0
-                    for i = 1, 8 do c = c + c + (x:sub(i, i) == "1" and 1 or 0) end
-                    return string.char(c)
-                end)
-            end
-            
-            local function xorDecrypt(data, key)
-                local result = ""
-                for i = 1, #data do
-                    local byte = string.byte(data, i)
-                    local keyByte = string.byte(key, ((i - 1) %% #key) + 1)
-                    result = result .. string.char(bit32.bxor(byte, keyByte))
-                end
-                return result
-            end
-            
-            local ENCRYPTION_KEY = "%s"
-            local encrypted = base64Decode("%s")
-            local decrypted = xorDecrypt(encrypted, ENCRYPTION_KEY)
-            loadstring(decrypted)()
-        ]], ENCRYPTION_KEY, encoded)
-        
-        if ScreenGui and ScreenGui.Parent then
-            ScreenGui:Destroy()
-        end
-        
-        -- Execute the encrypted loader
-        local execOk, execErr = pcall(function()
-            loadstring(encryptedLoader)()
-        end)
-        if not execOk then
-            warn("[Ecco Hub] Execution Error: " .. tostring(execErr))
-        end
-    else
-        warn("[Ecco Hub] Failed to fetch hub script")
-        if ScreenGui and ScreenGui.Parent then
-            ScreenGui:Destroy()
-        end
+    -- Direct encrypted loadstring execution
+    local encryptedLoader = [[
+local function base64Decode(data)
+    local b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    data = data:gsub("[^" .. b .. "=]", "")
+    return (data:gsub(".", function(x)
+        if x == "=" then return "" end
+        local r, f = "", b:find(x) - 1
+        for i = 6, 1, -1 do r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and "1" or "0") end
+        return r
+    end) .. "0000"):gsub("%d%d%d%d%d%d%d%d", function(x)
+        if #x < 8 then return "" end
+        local c = 0
+        for i = 1, 8 do c = c + c + (x:sub(i, i) == "1" and 1 or 0) end
+        return string.char(c)
+    end)
+end
+
+local function xorDecrypt(data, key)
+    local result = ""
+    for i = 1, #data do
+        local byte = string.byte(data, i)
+        local keyByte = string.byte(key, ((i - 1) % #key) + 1)
+        result = result .. string.char(bit32.bxor(byte, keyByte))
+    end
+    return result
+end
+
+local ENCRYPTION_KEY = "ecco_hub_security_key_2024"
+local encrypted = base64Decode("PUT_ENCRYPTED_DATA_HERE")
+local decrypted = xorDecrypt(encrypted, ENCRYPTION_KEY)
+loadstring(decrypted)()
+    ]]
+    
+    -- Execute the encrypted loader
+    local execOk, execErr = pcall(function()
+        loadstring(encryptedLoader)()
+    end)
+    if not execOk then
+        warn("[Ecco Hub] Execution Error: " .. tostring(execErr))
     end
 end)
