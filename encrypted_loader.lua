@@ -1,9 +1,8 @@
--- Ecco Hub - Sell Lemons | Encrypted Loader
+-- Ecco Hub - Sell Lemons | Premium Loader
 -- Launches the main hub after loading animation
 
 local CoreGui      = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
-local RunService   = game:GetService("RunService")
 
 -- =========================================
 -- Parent
@@ -28,7 +27,8 @@ Dim.BackgroundTransparency = 1
 Dim.BorderSizePixel      = 0
 Dim.ZIndex               = 1
 
-TweenService:Create(Dim, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.4}):Play()
+local dimTween = TweenService:Create(Dim, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.4})
+if dimTween then dimTween:Play() end
 
 -- =========================================
 -- Card with premium styling
@@ -48,11 +48,14 @@ CardStroke.Thickness = 2
 CardStroke.Color     = Color3.fromRGB(100, 80, 200)
 CardStroke.Transparency = 1
 
-TweenService:Create(Card, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+local cardTween = TweenService:Create(Card, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
     Position = UDim2.new(0.5, -190, 0.5, -140),
     BackgroundTransparency = 0,
-}):Play()
-TweenService:Create(CardStroke, TweenInfo.new(0.45), {Transparency = 0}):Play()
+})
+if cardTween then cardTween:Play() end
+
+local strokeTween = TweenService:Create(CardStroke, TweenInfo.new(0.45), {Transparency = 0})
+if strokeTween then strokeTween:Play() end
 
 -- =========================================
 -- Premium gradient top bar
@@ -101,13 +104,15 @@ end)
 -- Pulse effect on diamond
 task.spawn(function()
     while Diamond and Diamond.Parent do
-        TweenService:Create(Diamond, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        local pulseTween1 = TweenService:Create(Diamond, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
             TextTransparency = 0.3
-        }):Play()
+        })
+        if pulseTween1 then pulseTween1:Play() end
         task.wait(1)
-        TweenService:Create(Diamond, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        local pulseTween2 = TweenService:Create(Diamond, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
             TextTransparency = 0
-        }):Play()
+        })
+        if pulseTween2 then pulseTween2:Play() end
         task.wait(1)
     end
 end)
@@ -209,9 +214,10 @@ Credit.ZIndex              = 3
 local function setProgress(pct, msg, delay_)
     task.delay(delay_ or 0, function()
         if not Bar or not Bar.Parent then return end
-        TweenService:Create(Bar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+        local barTween = TweenService:Create(Bar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
             Size = UDim2.new(pct, 0, 1, 0)
-        }):Play()
+        })
+        if barTween then barTween:Play() end
         if StatusLabel and StatusLabel.Parent then
             StatusLabel.Text = msg
         end
@@ -228,12 +234,17 @@ setProgress(1.00, "Ready! Launching Ecco Hub...",       2.7)
 -- Load hub then destroy loader
 -- =========================================
 task.delay(3.3, function()
-    TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
+    local fadeOutCard = TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
         BackgroundTransparency = 1,
         Position = UDim2.new(0.5, -190, 0.45, -140),
-    }):Play()
-    TweenService:Create(CardStroke, TweenInfo.new(0.4), {Transparency = 1}):Play()
-    TweenService:Create(Dim, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+    })
+    if fadeOutCard then fadeOutCard:Play() end
+    
+    local fadeOutStroke = TweenService:Create(CardStroke, TweenInfo.new(0.4), {Transparency = 1})
+    if fadeOutStroke then fadeOutStroke:Play() end
+    
+    local fadeOutDim = TweenService:Create(Dim, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+    if fadeOutDim then fadeOutDim:Play() end
 
     task.wait(0.45)
     
