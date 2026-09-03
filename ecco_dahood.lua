@@ -38,7 +38,7 @@ shared.Zero = {
         },
 
         ['Checks'] = {
-            ['Visible']     = false, -- Set false for guaranteed hits through walls
+            ['Visible']     = false, -- Wallbang enabled
             ['Knocked']     = true,
             ['Grabbed']     = true,
             ['Equipped']    = false,
@@ -51,107 +51,32 @@ shared.Zero = {
         ['Distance']   = 1500,
         ['Smoothness'] = 0.850,
         ['Mode']       = 'Toggle',
-
-        ['Easing'] = {
-            ['Style']     = 'Sine',
-            ['Direction'] = 'InOut',
-        },
-
-        ['Hit Part'] = 'HumanoidRootPart',
-        ['Closest Point'] = {
-            ['Mode']  = 'Regular',
-            ['Scale'] = 40,
-        },
-
-        ['Prediction'] = {
-            ['X'] = 0.135,
-            ['Y'] = 0.135,
-            ['Z'] = 0.135,
-            ['Clamp Y Axis'] = {
-                ['Override'] = 'Partial',
-            },
-        },
+        ['Hit Part']   = 'HumanoidRootPart',
+        ['Prediction'] = { ['X'] = 0.135, ['Y'] = 0.135, ['Z'] = 0.135 },
     },
 
     ['Silent Aim'] = {
         ['Enabled']            = true,
         ['Distance']           = 10000,
         ['Visual Redirection'] = true,
-
-        ['Anti Curve'] = {
-            ['Enabled']   = true,
-            ['Visualize'] = true,
-            ['Max Angle'] = 25,
-        },
-
-        ['Hit Part'] = 'Head',
-        ['Closest Point'] = {
-            ['Mode']  = 'Regular',
-            ['Scale'] = 95,
-        },
-
-        ['Prediction'] = {
-            ['X'] = 0.138,
-            ['Y'] = 0.138,
-            ['Z'] = 0.138,
-            ['Y Axis'] = {
-                ['Override'] = 'Full',
-            },
-        },
-
+        ['Hit Part']           = 'Head',
+        ['Prediction']         = { ['X'] = 0.138, ['Y'] = 0.138, ['Z'] = 0.138 },
         ['Target Line'] = {
             ['Enabled'] = true,
             ['Regular'] = Color3.fromRGB(0, 230, 255),
             ['In FOV']  = Color3.fromRGB(255, 50, 50),
         },
-
         ['FOV'] = {
             ['Enabled'] = true,
             ['Visible'] = true,
             ['Scan']    = 280,
-            ['Method']  = 'Automatic',
-            ['Ignore']  = true,
-            ['Mode'] = {
-                ['Type'] = 'Circle',
-                ['Mode'] = 'Circle',
-                ['Size'] = {
-                    ['Circle']  = 280,
-                    ['2D_Box']  = {100, 100},
-                    ['3D_Box']  = {2, 2, 2},
-                },
-            },
         },
     },
 
     ['Trigger Bot'] = {
-        ['Enabled']  = true,
-        ['Mode']     = 'Hitbox',
+        ['Enabled']  = false,
         ['Distance'] = 1000,
-        ['Cooldown'] = 0,
-
-        ['Activation'] = {
-            ['Mode'] = 'Keybind',
-            ['Type'] = 'Hold',
-        },
-
-        ['Hit Part'] = {
-            ['Enabled'] = true,
-            ['Part']    = 'HumanoidRootPart',
-        },
-
-        ['Prediction'] = {
-            ['X'] = 0.135,
-            ['Y'] = 0.135,
-            ['Z'] = 0.135,
-        },
-
-        ['FOV'] = {
-            ['Enabled'] = true,
-            ['Visible'] = false,
-            ['Scan']    = math.huge,
-            ['Sync']    = false,
-            ['2D_Box']  = {50, 50},
-        },
+        ['Hit Part'] = { ['Enabled'] = true, ['Part'] = 'HumanoidRootPart' },
     },
 
     ['Player Modifications'] = {
@@ -160,9 +85,9 @@ shared.Zero = {
 
         ['Speed'] = {
             ['Enabled']    = true,
-            ['Low Health'] = {['Value'] = 75},
-            ['Reloading']  = {['Value'] = 65},
-            ['Default']    = {['Value'] = 75},
+            ['Low Health'] = { ['Value'] = 75 },
+            ['Reloading']  = { ['Value'] = 65 },
+            ['Default']    = { ['Value'] = 75 },
         },
 
         ['Jump Power'] = {
@@ -175,305 +100,51 @@ shared.Zero = {
             ['Speed']   = 110,
         },
 
-        ['Anti Jump Cooldown'] = {
-            ['Enabled'] = true,
-        },
-
-        ['Panic Ground'] = {
-            ['Enabled'] = false,
-        },
-
-        ['Wall Hop'] = {
-            ['Enabled']        = true, 
-            ['Jump Strength']  = 50,
-            ['Knife Strength'] = 60,
-        },
-    },
-
-    ['Weapon Modifications'] = {
-        ['Spread Changer'] = {
-            ['Enabled']            = true,
-            ['[Double-Barrel SG]'] = {['Value'] = 0.7},
-            ['[TacticalShotgun]']  = {['Value'] = 0.7},
-            ['[Shotgun]']          = {['Value'] = 0.7},
-        },
-
-        ['Double Tap'] = {
-            ['Enabled']    = true,
-            ['[Revolver]'] = {['Value'] = true},
-            ['[Silencer]'] = {['Value'] = false},
-            ['[Glock]']    = {['Value'] = false},
-        },
-
-        ['Delay Changer'] = {
-            ['Enabled']            = true,
-            ['[Double-Barrel SG]'] = {['Value'] = 0.05},
-            ['[TacticalShotgun]']  = {['Value'] = 0.05},
-            ['[Revolver]']         = {['Value'] = 0.01},
-            ['[Deagle]']           = {['Value'] = 0.01},
-        },
-    },
-
-    ['Weapon Override'] = {
-        ['Enabled'] = true,
-        ['Weapons'] = {
-            ['[Double-Barrel SG]'] = { 'Full' },
-            ['[Revolver]']         = { 'Full' },
-            ['[TacticalShotgun]']  = { 'Full' },
-            ['[LMG]']              = { 'Full' },
-        },
-    },
-
-    ['Inventory Sorter'] = {
-        ['Enabled'] = true,
-        ['Order'] = {
-            '[Double-Barrel SG]',
-            '[Revolver]',
-            '[TacticalShotgun]',
-            '[Knife]',
-        },
-    },
-
-    ['Rage Mode'] = {
-        ['Enabled']     = false,
-        ['Mode']        = 'Rabbit',
-        ['Visualize']   = false,
-        ['Full Damage'] = false,
+        ['Anti Jump Cooldown'] = { ['Enabled'] = true },
     },
 
     ['Hitbox Expander'] = {
         ['Enabled'] = true,
         ['Size']    = 24,
-        ['Link']    = false,
     },
 
-    ['Future'] = {
-        ['Enabled'] = true,
-        ['Flow']    = 12,
-        ['Sanity']  = 2,
-        ['Bait']    = 12,
-    },
-
-    ['Hood Customs'] = {
-        ['Force Hit'] = true,
-        ['Cooldown']  = 0.05,
+    ['Weapon Modifications'] = {
+        ['Delay Changer'] = {
+            ['Enabled']            = false, -- Disabled to prevent gun jamming
+            ['[Double-Barrel SG]'] = { ['Value'] = 0.22 },
+            ['[TacticalShotgun]']  = { ['Value'] = 0.18 },
+            ['[Revolver]']         = { ['Value'] = 0.1 },
+            ['[Deagle]']           = { ['Value'] = 0.1 },
+        },
     },
 
     ['ESP'] = {
         ['Enabled'] = true,
         ['Nametag'] = true,
-        ['Normal']  = Color3.fromRGB(255, 255, 255),
-        ['Target']  = Color3.fromRGB(255, 50, 50),
-    },
-
-    ['Visualization'] = {
-        ['Load Check'] = false,
-        ['Global ESP'] = {
-            ['Enabled']           = true,
-            ['Team Check']        = false,
-            ['Max Draw Distance'] = 4000,
-            ['Text Size']         = 13,
-            ['Text Font']         = 'Smallest Pixel',
-            ['Fade Effect'] = {
-                ['On Distance'] = false,
-            },
-            ['Drawing'] = {
-                ['Names'] = {
-                    ['Enabled'] = true,
-                    ['Color']   = Color3.fromRGB(255, 255, 255),
-                },
-                ['Distance'] = {
-                    ['Enabled'] = true,
-                    ['Docked']  = true,
-                    ['Color']   = Color3.fromRGB(180, 200, 255),
-                },
-                ['Health'] = {
-                    ['Enabled']        = true,
-                    ['Text']           = true,
-                    ['Position']       = 'Left',
-                    ['Health Based']   = true,
-                    ['Text Color']     = Color3.fromRGB(100, 255, 100),
-                    ['Width']          = 2,
-                    ['Gradient']       = false,
-                    ['Alpha Color']    = Color3.fromRGB(0, 255, 0),
-                    ['Depth Color']    = Color3.fromRGB(255, 0, 0),
-                    ['Color Keypoint'] = Color3.fromRGB(0, 255, 0),
-                },
-                ['Boxes'] = {
-                    ['Enabled']  = true,
-                    ['Box Type'] = 'Corner',
-                    ['Bounding Box'] = {
-                        ['Animate']            = false,
-                        ['Animate Speed']      = 360,
-                        ['Gradient']           = false,
-                        ['Alpha Color']        = Color3.fromRGB(0, 230, 255),
-                        ['Depth Color']        = Color3.fromRGB(0, 100, 255),
-                        ['Filled Color Scheme'] = false,
-                        ['Fill Color']         = Color3.fromRGB(0, 230, 255),
-                        ['Fill Glow']          = Color3.fromRGB(0, 230, 255),
-                        ['Filled'] = {
-                            ['Enabled']      = false,
-                            ['Transparency'] = 0.85,
-                            ['Color']        = Color3.fromRGB(0, 0, 0),
-                        },
-                    },
-                    ['Corner'] = {
-                        ['Color'] = Color3.fromRGB(0, 230, 255),
-                    },
-                },
-            },
-        },
-        ['Crosshair'] = {
-            ['Visible']        = false,
-            ['Stutter']        = 0,
-            ['Docked']         = false,
-            ['Width']          = 1.5,
-            ['Length']         = 15,
-            ['Radius']         = 5,
-            ['Color']          = Color3.fromRGB(0, 230, 255),
-            ['Rotate']         = true,
-            ['Rotate Speed']   = 150,
-            ['Max Angle']      = 360,
-            ['Lerp Style']     = Enum.EasingStyle.Linear,
-            ['Fluctuate']      = true,
-            ['Fluctuate Speed'] = 150,
-            ['Fluctuate Min']  = 5,
-            ['Fluctuate Max']  = 22,
-            ['Labels'] = {
-                ['Name'] = {
-                    ['Visible'] = true,
-                    ['Text']    = 'ZERO',
-                    ['Color']   = Color3.fromRGB(0, 230, 255),
-                },
-                ['Extension'] = {
-                    ['Visible'] = true,
-                    ['Text']    = '.XYZ',
-                    ['Color']   = Color3.fromRGB(255, 255, 255),
-                },
-                ['Current Target'] = {
-                    ['Visible'] = false,
-                    ['Color']   = Color3.fromRGB(255, 255, 255),
-                },
-                ['Current Target Health'] = {
-                    ['Visible'] = false,
-                    ['Color']   = Color3.fromRGB(165, 255, 191),
-                },
-            },
-        },
-    },
-
-    ['Skin Modifications'] = {
-        ['Da Hood']      = true,
-        ['Dee Hood']     = false,
-        ['Hood Customs'] = false,
-        ['Unlock All']   = true,
-        ['Selected Weapons'] = {
-            ['[Revolver]']         = 'Golden Age',
-            ['[Double-Barrel SG]'] = 'Galaxy',
-            ['[TacticalShotgun]']  = 'Luck',
-            ['[Knife]']            = 'Golden Age Tanto',
-        },
-    },
-
-    ['Da Hood'] = {
-        ['Armor Aura'] = {
-            ['Enabled']  = false,
-            ['Distance'] = 100,
-        },
-        ['Wall Bang'] = {
-            ['Enabled']  = true,
-            ['Distance'] = 200,
-            ['Hit Part'] = 'HumanoidRootPart',
-        },
-    },
-
-    ['Das Hood'] = {
-        ['Infinite Range'] = {
-            ['Enabled'] = true,
-            ['Range']   = 100000,
-        },
-    },
-
-    ['Des Hood'] = {
-        ['Wall Bang']      = {['Enabled'] = true},
-        ['Infinite Range'] = {['Enabled'] = true, ['Range'] = 9e9},
-    },
-
-    ['Der Hood'] = {
-        ['Wall Bang']      = {['Enabled'] = true},
-        ['Infinite Range'] = {['Enabled'] = true, ['Range'] = 9e9},
-    },
-
-    ['Safety Mode'] = {
-        ['Enabled']     = false,
-        ['Crew Mode']   = false,
-        ['Friend Mode'] = false,
-        ['Crew ID']     = 4705120,
-        ['Tryouts Mode'] = {
-            ['Enabled'] = false,
-        },
-        ['Report Detector'] = {
-            ['Enabled']     = true,
-            ['Auto Kick']   = true,
-            ['Report Back'] = true,
-        },
-    },
-
-    ['Anti Future'] = {
-        ['Enabled']      = true,
-        ['Visible']      = false,
-        ['Detection']    = 27,
-        ['Still']        = false,
-        ['Above']        = true,
-        ['Above Height'] = 36,
-        ['Behind']       = true,
-        ['Color']        = {255, 255, 255, Rainbow = false},
-    },
-
-    ['Character Spoofing'] = {
-        ['Body Spoofer'] = {
-            ['Enabled']    = false,
-            ['Memory']     = false,
-            ['Korblox']    = false,
-            ['Headless']   = false,
-            ['Animations'] = false,
-        },
-        ['Hat Spoofer'] = {
-            ['Enabled']        = false,
-            ['Apply Respawn']  = true,
-            ['Remove Active']  = false,
-            ['List']           = {89171071, 172309919, 187848395, 398674411},
-        },
-        ['Avatar Spoofer'] = {
-            ['Enabled']       = false,
-            ['Apply Respawn'] = true,
-            ['User']          = '665640628',
-            ['Copy Emotes']   = true,
-            ['Morph Spoofer'] = {
-                ['Enabled'] = false,
-                ['Mode']    = 'Default',
-            },
-            ['Animation Spoofer'] = {
-                ['Enabled'] = false,
-                ['Animations'] = {
-                    ['Idle'] = 'Zombie',
-                    ['Jump'] = 'Ninja',
-                    ['Walk'] = 'Zombie',
-                    ['Run']  = 'Zombie',
-                    ['Fall'] = 'Ninja',
-                },
-            },
-        },
-        ['Interface Spoofer'] = {
-            ['Enabled'] = false,
-            ['User']    = '10400567910',
-        },
     },
 }
 
--- Alias to shared.Ecco and shared["zero.xyz"] for seamless backward compatibility
-shared["zero.xyz"] = shared.Zero
+-- Backward compatibility alias
 shared.Ecco = shared.Zero
+shared["zero.xyz"] = shared.Zero
+
+----------------------------------------------------------------------------------------
+-- CLEANUP PREVIOUS INSTANCES
+----------------------------------------------------------------------------------------
+pcall(function()
+    if gethui then
+        for _, c in ipairs(gethui():GetChildren()) do
+            if c.Name == "ZERO_Overlay" then c:Destroy() end
+        end
+    end
+    local cg = game:GetService("CoreGui")
+    for _, c in ipairs(cg:GetChildren()) do
+        if c.Name == "ZERO_Overlay" then c:Destroy() end
+    end
+    if getgenv().Zero_Cleanup then
+        getgenv().Zero_Cleanup()
+    end
+end)
 
 ----------------------------------------------------------------------------------------
 -- KEY AUTHENTICATION SYSTEM
@@ -496,7 +167,7 @@ end
 local Config = shared.Zero
 
 ----------------------------------------------------------------------------------------
--- CORE INITIALIZATION & DEPENDENCIES
+-- CORE DEPENDENCIES
 ----------------------------------------------------------------------------------------
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -527,13 +198,14 @@ local function Notify(title, message, duration)
 end
 
 ----------------------------------------------------------------------------------------
--- UNIVERSAL ANTI-CHEAT PURGE (DYNAMIC PATTERN DETECTION & SPAWN PURGE)
+-- SAFE DA HOOD ANTI-CHEAT NEUTRALIZATION (NEVER TOUCHES TOOLS OR GUNCLIENT)
 ----------------------------------------------------------------------------------------
 local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
     task.spawn(function()
-        for _, obj in ipairs(char:GetDescendants()) do
-            if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
+        for _, obj in ipairs(char:GetChildren()) do
+            -- Only neutralize obfuscated anti-cheat scripts directly parented to Character
+            if obj:IsA("LocalScript") and obj.Name ~= "Animate" and obj.Name ~= "GunClient" and obj.Name ~= "CombatScript" then
                 pcall(function()
                     obj.Disabled = true
                     obj:Destroy()
@@ -541,8 +213,9 @@ local function NeutralizeCharacterAntiCheat(char)
             end
         end
 
-        char.DescendantAdded:Connect(function(obj)
-            if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
+        char.ChildAdded:Connect(function(obj)
+            -- Only target non-tool scripts added directly to Character
+            if obj:IsA("LocalScript") and obj.Name ~= "Animate" and obj.Name ~= "GunClient" and obj.Name ~= "CombatScript" then
                 pcall(function()
                     obj.Disabled = true
                     obj:Destroy()
@@ -626,7 +299,7 @@ local function GetSilentAimHitPart()
 end
 
 ----------------------------------------------------------------------------------------
--- METAMETHOD HOOKS (SILENT AIM & ANTI-CHEAT SHIELD)
+-- METAMETHOD HOOKS (PRECISE SILENT AIM & AC SHIELD)
 ----------------------------------------------------------------------------------------
 local BlockedCheckers = {
     ["CHECKER_1"] = true,
@@ -645,24 +318,23 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
 
-    if self == MainEvent and method == "FireServer" then
+    if not checkcaller() and method == "FireServer" and self == MainEvent then
         local eventName = tostring(args[1])
-        local eventLower = eventName:lower()
 
-        -- Block all AC traps completely
+        -- Block AC traps completely
         if BlockedCheckers[eventName] then
             return nil
         end
 
-        -- Silent Aim Interception (Supports UpdateMousePos, UpdateMousePosI2, ShootGun)
-        if Config['Silent Aim'].Enabled and not checkcaller() then
-            if eventLower:find("updatemousepos") or eventName == "UpdateMousePosI2" or eventName == "UpdateMousePos" then
+        -- Silent Aim: ONLY redirect UpdateMousePos and ShootGun (NEVER touch ShootButton or others)
+        if Config['Silent Aim'].Enabled then
+            if eventName == "UpdateMousePosI2" or eventName == "UpdateMousePos" then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     args[2] = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     return oldNamecall(self, unpack(args))
                 end
-            elseif eventName == "ShootGun" or eventLower:find("shoot") then
+            elseif eventName == "ShootGun" then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
@@ -680,14 +352,15 @@ end))
 
 oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
     if not checkcaller() and Config['Silent Aim'].Enabled then
-        if typeof(self) == "Instance" and (self:IsA("Mouse") or self:IsA("PlayerMouse") or tostring(self) == "Mouse") then
-            if key == "Hit" or key == "hit" then
+        if typeof(self) == "Instance" and (self:IsA("Mouse") or self:IsA("PlayerMouse")) then
+            local k = tostring(key):lower()
+            if k == "hit" then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     return CFrame.new(predicted)
                 end
-            elseif key == "Target" or key == "target" then
+            elseif k == "target" then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     return part
@@ -699,7 +372,7 @@ oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
 end))
 
 ----------------------------------------------------------------------------------------
--- VISUALS: DRAWING FOV & TARGET LINE
+-- VISUALS: DRAWING FOV & TRACER
 ----------------------------------------------------------------------------------------
 local FOVCircle = nil
 local TargetLine = nil
@@ -843,32 +516,11 @@ RunService.RenderStepped:Connect(function()
 end)
 
 ----------------------------------------------------------------------------------------
--- TRIGGER BOT ENGINE
-----------------------------------------------------------------------------------------
-task.spawn(function()
-    while true do
-        task.wait(0.05)
-        if Config['Trigger Bot'].Enabled and TriggerBotActive then
-            local target = Mouse.Target
-            if target and target.Parent then
-                local player = Players:GetPlayerFromCharacter(target.Parent) or Players:GetPlayerFromCharacter(target.Parent.Parent)
-                if player and IsValidTarget(player) then
-                    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                    if tool then
-                        tool:Activate()
-                    end
-                end
-            end
-        end
-    end
-end)
-
-----------------------------------------------------------------------------------------
 -- HITBOX EXPANDER ENGINE
 ----------------------------------------------------------------------------------------
 task.spawn(function()
     while true do
-        task.wait(0.4)
+        task.wait(0.5)
         local hbConfig = Config['Hitbox Expander']
         if hbConfig and hbConfig.Enabled then
             local size = hbConfig.Size or 24
@@ -885,43 +537,6 @@ task.spawn(function()
         end
     end
 end)
-
-----------------------------------------------------------------------------------------
--- WEAPON MODIFICATIONS (COOLDOWN CHANGER & SPREAD)
-----------------------------------------------------------------------------------------
-local function ApplyWeaponMods(tool)
-    if not tool or not tool:IsA("Tool") then return end
-    local toolName = tool.Name
-
-    -- Delay Changer
-    if Config['Weapon Modifications']['Delay Changer'].Enabled then
-        local dc = Config['Weapon Modifications']['Delay Changer'][toolName]
-        if dc and dc.Value then
-            local cooldown = tool:FindFirstChild("ShootingCooldown")
-            if cooldown and cooldown:IsA("NumberValue") then
-                cooldown.Value = dc.Value
-            end
-        end
-    end
-
-    -- Infinite Range
-    if Config['Das Hood'] and Config['Das Hood']['Infinite Range'] and Config['Das Hood']['Infinite Range'].Enabled then
-        local range = tool:FindFirstChild("Range")
-        if range and range:IsA("NumberValue") then
-            range.Value = Config['Das Hood']['Infinite Range'].Range or 100000
-        end
-    end
-end
-
-LocalPlayer.CharacterAdded:Connect(function(char)
-    char.ChildAdded:Connect(ApplyWeaponMods)
-end)
-if LocalPlayer.Character then
-    LocalPlayer.Character.ChildAdded:Connect(ApplyWeaponMods)
-    for _, t in ipairs(LocalPlayer.Character:GetChildren()) do ApplyWeaponMods(t) end
-end
-for _, t in ipairs(LocalPlayer.Backpack:GetChildren()) do ApplyWeaponMods(t) end
-LocalPlayer.Backpack.ChildAdded:Connect(ApplyWeaponMods)
 
 ----------------------------------------------------------------------------------------
 -- UNDETECTED MOVEMENT ENGINE (WALKSPEED & FLIGHT)
@@ -1001,7 +616,13 @@ end)
 local function SortInventory()
     local backpack = LocalPlayer:FindFirstChild("Backpack")
     if not backpack then return end
-    local order = Config['Inventory Sorter'].Order
+    local order = {
+        '[Double-Barrel SG]',
+        '[Revolver]',
+        '[TacticalShotgun]',
+        '[Shotgun]',
+        '[Knife]',
+    }
     for _, toolName in ipairs(order) do
         local tool = backpack:FindFirstChild(toolName)
         if tool then
@@ -1027,12 +648,12 @@ local function CreateESP(player)
     }
     box.Box.Thickness = 1.5
     box.Box.Filled = false
-    box.Box.Color = Config.Visualization['Global ESP'].Drawing.Boxes.Corner.Color or Color3.fromRGB(0, 230, 255)
+    box.Box.Color = Color3.fromRGB(0, 230, 255)
 
-    box.Name.Size = Config.Visualization['Global ESP']['Text Size'] or 13
+    box.Name.Size = 13
     box.Name.Center = true
     box.Name.Outline = true
-    box.Name.Color = Config.Visualization['Global ESP'].Drawing.Names.Color or Color3.fromRGB(255, 255, 255)
+    box.Name.Color = Color3.fromRGB(255, 255, 255)
 
     box.Health.Thickness = 2
     box.Health.Color = Color3.fromRGB(0, 255, 0)
@@ -1058,7 +679,7 @@ Players.PlayerRemoving:Connect(function(p)
 end)
 
 RunService.RenderStepped:Connect(function()
-    local espEnabled = Config.Visualization['Global ESP'].Enabled or Config.ESP.Enabled
+    local espEnabled = Config.ESP.Enabled
     for player, esp in pairs(ESPBoxes) do
         if espEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChildOfClass("Humanoid") then
             local char = player.Character
@@ -1143,11 +764,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         UpdateHotkeyHUD()
     end
 
-    -- Trigger Bot Hold
-    if key == binds['Trigger Bot']:lower() then
-        TriggerBotActive = true
-    end
-
     -- WalkSpeed Toggle
     if key == binds['Walk Speed']:lower() then
         Config['Player Modifications'].Speed.Enabled = not Config['Player Modifications'].Speed.Enabled
@@ -1176,7 +792,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     -- ESP Toggle
     if key == binds['ESP']:lower() then
         Config.ESP.Enabled = not Config.ESP.Enabled
-        Config.Visualization['Global ESP'].Enabled = Config.ESP.Enabled
         Notify("ESP", Config.ESP.Enabled and "ENABLED" or "DISABLED")
         UpdateHotkeyHUD()
     end
@@ -1184,15 +799,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     -- Inventory Sorter
     if key == binds['Inventory Sorter']:lower() then
         SortInventory()
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(input, gameProcessed)
-    if input.UserInputType == Enum.UserInputType.Keyboard then
-        local key = input.KeyCode.Name:lower()
-        if key == Config.General.Binds['Trigger Bot']:lower() then
-            TriggerBotActive = false
-        end
     end
 end)
 
