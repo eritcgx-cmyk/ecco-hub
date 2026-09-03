@@ -5,28 +5,10 @@
     ========================================================================================
 ]]
 
--- KEY AUTHENTICATION SYSTEM
-local VALID_KEYS = {
-    ["fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"] = true,
-    ["ZERO-FREE-KEY-2026"] = true,
-    ["ZERO-VIP-ALPHA"] = true,
-    ["ZERO.XYZ-PUBLIC-2026"] = true,
-}
+-- PUBLIC CONFIGURATION TABLE (CUSTOMIZE EVERYTHING HERE)
+script_key = "fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq";
 
-local userKey = getgenv().script_key or _G.script_key or script_key or "fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"
-
-if not userKey or not VALID_KEYS[tostring(userKey)] then
-    pcall(function()
-        game:GetService("Players").LocalPlayer:Kick("\n\n[ZERO.XYZ - AUTH REJECTED]\nInvalid or missing script_key.\nJoin discord.gg/zero-xyz to get your key.\n")
-    end)
-    return
-end
-
--- ZERO.XYZ CONFIGURATION INHERITANCE
--- Resolves user table: shared.Zero, shared["zero.xyz"], or shared.Ecco
-local UserProvidedConfig = shared.Zero or shared["zero.xyz"] or shared.Ecco
-
-local DefaultConfig = {
+shared.Zero = {
     ['General'] = {
         ['Key'] = 'DoNotTouchThis',
         ['Multi Thread'] = true,
@@ -47,19 +29,19 @@ local DefaultConfig = {
         },
 
         ['Show Hotkeys'] = {
-            ['Enabled']         = false,
-            ['Brand Color']     = Color3.fromRGB(255, 255, 255),
+            ['Enabled']         = true,
+            ['Brand Color']     = Color3.fromRGB(0, 230, 255),
             ['Feature Color']   = Color3.fromRGB(255, 255, 255),
             ['Target Color']    = Color3.fromRGB(100, 255, 100),
-            ['Watermark']       = 'zero.xyz on top',
-            ['Watermark Color'] = Color3.fromRGB(0, 0, 0),
+            ['Watermark']       = 'zero.xyz | stealth engine',
+            ['Watermark Color'] = Color3.fromRGB(0, 230, 255),
         },
 
         ['Checks'] = {
-            ['Visible']     = true,
+            ['Visible']     = false, -- Set false for guaranteed hits through walls
             ['Knocked']     = true,
             ['Grabbed']     = true,
-            ['Equipped']    = false, -- Prevents crashes when holding Combat/Fists
+            ['Equipped']    = false,
             ['Forcefield']  = true,
         },
     },
@@ -118,22 +100,22 @@ local DefaultConfig = {
         },
 
         ['Target Line'] = {
-            ['Enabled'] = false,
-            ['Regular'] = Color3.fromRGB(255, 255, 255),
-            ['In FOV']  = Color3.fromRGB(255, 0, 0),
+            ['Enabled'] = true,
+            ['Regular'] = Color3.fromRGB(0, 230, 255),
+            ['In FOV']  = Color3.fromRGB(255, 50, 50),
         },
 
         ['FOV'] = {
             ['Enabled'] = true,
-            ['Visible'] = false,
-            ['Scan']    = 250,
+            ['Visible'] = true,
+            ['Scan']    = 280,
             ['Method']  = 'Automatic',
             ['Ignore']  = true,
             ['Mode'] = {
                 ['Type'] = 'Circle',
                 ['Mode'] = 'Circle',
                 ['Size'] = {
-                    ['Circle']  = 250,
+                    ['Circle']  = 280,
                     ['2D_Box']  = {100, 100},
                     ['3D_Box']  = {2, 2, 2},
                 },
@@ -174,23 +156,23 @@ local DefaultConfig = {
 
     ['Player Modifications'] = {
         ['Anti Trip']  = true,
-        ['Anti Stomp'] = false,
+        ['Anti Stomp'] = true,
 
         ['Speed'] = {
-            ['Enabled']    = false,
-            ['Low Health'] = {['Value'] = 16},
-            ['Reloading']  = {['Value'] = 16},
-            ['Default']    = {['Value'] = 16},
+            ['Enabled']    = true,
+            ['Low Health'] = {['Value'] = 75},
+            ['Reloading']  = {['Value'] = 65},
+            ['Default']    = {['Value'] = 75},
         },
 
         ['Jump Power'] = {
             ['Enabled'] = false,
-            ['Value']   = 50,
+            ['Value']   = 85,
         },
 
         ['Flying'] = {
             ['Enabled'] = false,
-            ['Speed']   = 100,
+            ['Speed']   = 110,
         },
 
         ['Anti Jump Cooldown'] = {
@@ -217,7 +199,7 @@ local DefaultConfig = {
         },
 
         ['Double Tap'] = {
-            ['Enabled']    = false,
+            ['Enabled']    = true,
             ['[Revolver]'] = {['Value'] = true},
             ['[Silencer]'] = {['Value'] = false},
             ['[Glock]']    = {['Value'] = false},
@@ -225,10 +207,10 @@ local DefaultConfig = {
 
         ['Delay Changer'] = {
             ['Enabled']            = true,
-            ['[Double-Barrel SG]'] = {['Value'] = 0.22},
-            ['[TacticalShotgun]']  = {['Value'] = 0.18},
-            ['[Revolver]']         = {['Value'] = 0},
-            ['[Deagle]']           = {['Value'] = 0},
+            ['[Double-Barrel SG]'] = {['Value'] = 0.05},
+            ['[TacticalShotgun]']  = {['Value'] = 0.05},
+            ['[Revolver]']         = {['Value'] = 0.01},
+            ['[Deagle]']           = {['Value'] = 0.01},
         },
     },
 
@@ -261,7 +243,7 @@ local DefaultConfig = {
 
     ['Hitbox Expander'] = {
         ['Enabled'] = true,
-        ['Size']    = 32,
+        ['Size']    = 24,
         ['Link']    = false,
     },
 
@@ -278,18 +260,18 @@ local DefaultConfig = {
     },
 
     ['ESP'] = {
-        ['Enabled'] = false,
-        ['Nametag'] = false,
+        ['Enabled'] = true,
+        ['Nametag'] = true,
         ['Normal']  = Color3.fromRGB(255, 255, 255),
-        ['Target']  = Color3.fromRGB(255, 100, 100),
+        ['Target']  = Color3.fromRGB(255, 50, 50),
     },
 
     ['Visualization'] = {
         ['Load Check'] = false,
         ['Global ESP'] = {
-            ['Enabled']           = false,
+            ['Enabled']           = true,
             ['Team Check']        = false,
-            ['Max Draw Distance'] = math.huge,
+            ['Max Draw Distance'] = 4000,
             ['Text Size']         = 13,
             ['Text Font']         = 'Smallest Pixel',
             ['Fade Effect'] = {
@@ -297,46 +279,46 @@ local DefaultConfig = {
             },
             ['Drawing'] = {
                 ['Names'] = {
-                    ['Enabled'] = false,
-                    ['Color']   = Color3.fromRGB(227, 180, 206),
+                    ['Enabled'] = true,
+                    ['Color']   = Color3.fromRGB(255, 255, 255),
                 },
                 ['Distance'] = {
-                    ['Enabled'] = false,
+                    ['Enabled'] = true,
                     ['Docked']  = true,
-                    ['Color']   = Color3.fromRGB(175, 194, 223),
+                    ['Color']   = Color3.fromRGB(180, 200, 255),
                 },
                 ['Health'] = {
-                    ['Enabled']        = false,
-                    ['Text']           = false,
+                    ['Enabled']        = true,
+                    ['Text']           = true,
                     ['Position']       = 'Left',
-                    ['Health Based']   = false,
-                    ['Text Color']     = Color3.fromRGB(195, 193, 239),
-                    ['Width']          = 1.5,
-                    ['Gradient']       = true,
-                    ['Alpha Color']    = Color3.fromRGB(189, 185, 235),
-                    ['Depth Color']    = Color3.fromRGB(239, 193, 193),
-                    ['Color Keypoint'] = Color3.fromRGB(202, 219, 247),
+                    ['Health Based']   = true,
+                    ['Text Color']     = Color3.fromRGB(100, 255, 100),
+                    ['Width']          = 2,
+                    ['Gradient']       = false,
+                    ['Alpha Color']    = Color3.fromRGB(0, 255, 0),
+                    ['Depth Color']    = Color3.fromRGB(255, 0, 0),
+                    ['Color Keypoint'] = Color3.fromRGB(0, 255, 0),
                 },
                 ['Boxes'] = {
-                    ['Enabled']  = false,
+                    ['Enabled']  = true,
                     ['Box Type'] = 'Corner',
                     ['Bounding Box'] = {
                         ['Animate']            = false,
                         ['Animate Speed']      = 360,
                         ['Gradient']           = false,
-                        ['Alpha Color']        = Color3.fromRGB(205, 160, 227),
-                        ['Depth Color']        = Color3.fromRGB(204, 177, 188),
+                        ['Alpha Color']        = Color3.fromRGB(0, 230, 255),
+                        ['Depth Color']        = Color3.fromRGB(0, 100, 255),
                         ['Filled Color Scheme'] = false,
-                        ['Fill Color']         = Color3.fromRGB(204, 244, 215),
-                        ['Fill Glow']          = Color3.fromRGB(226, 191, 188),
+                        ['Fill Color']         = Color3.fromRGB(0, 230, 255),
+                        ['Fill Glow']          = Color3.fromRGB(0, 230, 255),
                         ['Filled'] = {
                             ['Enabled']      = false,
-                            ['Transparency'] = 0.75,
-                            ['Color']        = Color3.fromRGB(193, 177, 214),
+                            ['Transparency'] = 0.85,
+                            ['Color']        = Color3.fromRGB(0, 0, 0),
                         },
                     },
                     ['Corner'] = {
-                        ['Color'] = Color3.fromRGB(226, 181, 181),
+                        ['Color'] = Color3.fromRGB(0, 230, 255),
                     },
                 },
             },
@@ -348,7 +330,7 @@ local DefaultConfig = {
             ['Width']          = 1.5,
             ['Length']         = 15,
             ['Radius']         = 5,
-            ['Color']          = Color3.fromRGB(180, 207, 227),
+            ['Color']          = Color3.fromRGB(0, 230, 255),
             ['Rotate']         = true,
             ['Rotate Speed']   = 150,
             ['Max Angle']      = 360,
@@ -359,14 +341,14 @@ local DefaultConfig = {
             ['Fluctuate Max']  = 22,
             ['Labels'] = {
                 ['Name'] = {
-                    ['Visible'] = false,
+                    ['Visible'] = true,
                     ['Text']    = 'ZERO',
-                    ['Color']   = Color3.fromRGB(180, 207, 227),
+                    ['Color']   = Color3.fromRGB(0, 230, 255),
                 },
                 ['Extension'] = {
-                    ['Visible'] = false,
+                    ['Visible'] = true,
                     ['Text']    = '.XYZ',
-                    ['Color']   = Color3.fromRGB(180, 207, 227),
+                    ['Color']   = Color3.fromRGB(255, 255, 255),
                 },
                 ['Current Target'] = {
                     ['Visible'] = false,
@@ -408,7 +390,7 @@ local DefaultConfig = {
     ['Das Hood'] = {
         ['Infinite Range'] = {
             ['Enabled'] = true,
-            ['Range']   = 10e10,
+            ['Range']   = 100000,
         },
     },
 
@@ -463,7 +445,7 @@ local DefaultConfig = {
             ['List']           = {89171071, 172309919, 187848395, 398674411},
         },
         ['Avatar Spoofer'] = {
-            ['Enabled']       = true,
+            ['Enabled']       = false,
             ['Apply Respawn'] = true,
             ['User']          = '665640628',
             ['Copy Emotes']   = true,
@@ -489,33 +471,29 @@ local DefaultConfig = {
     },
 }
 
--- Deep merge user config over default config
-local function DeepMerge(default, user)
-    if type(user) ~= "table" then return default end
-    local merged = {}
-    for k, v in pairs(default) do
-        if type(v) == "table" and type(user[k]) == "table" then
-            merged[k] = DeepMerge(v, user[k])
-        elseif user[k] ~= nil then
-            merged[k] = user[k]
-        else
-            merged[k] = v
-        end
-    end
-    for k, v in pairs(user) do
-        if merged[k] == nil then
-            merged[k] = v
-        end
-    end
-    return merged
+-- Alias to shared.Ecco and shared["zero.xyz"] for seamless backward compatibility
+shared["zero.xyz"] = shared.Zero
+shared.Ecco = shared.Zero
+
+----------------------------------------------------------------------------------------
+-- KEY AUTHENTICATION SYSTEM
+----------------------------------------------------------------------------------------
+local VALID_KEYS = {
+    ["fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"] = true,
+    ["ZERO-FREE-KEY-2026"] = true,
+    ["ZERO-VIP-ALPHA"] = true,
+    ["ZERO.XYZ-PUBLIC-2026"] = true,
+}
+
+local userKey = getgenv().script_key or _G.script_key or script_key
+if not userKey or not VALID_KEYS[tostring(userKey)] then
+    pcall(function()
+        game:GetService("Players").LocalPlayer:Kick("\n\n[ZERO.XYZ - AUTH REJECTED]\nInvalid or missing script_key.\nJoin discord.gg/zero-xyz to get your key.\n")
+    end)
+    return
 end
 
-local Config = DeepMerge(DefaultConfig, UserProvidedConfig or {})
-
--- Sync to all global config handles
-shared.Zero = Config
-shared["zero.xyz"] = Config
-shared.Ecco = Config
+local Config = shared.Zero
 
 ----------------------------------------------------------------------------------------
 -- CORE INITIALIZATION & DEPENDENCIES
@@ -525,11 +503,11 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
 
 local LocalPlayer = Players.LocalPlayer
 local Camera = Workspace.CurrentCamera
 local Mouse = LocalPlayer:GetMouse()
-
 local MainEvent = ReplicatedStorage:WaitForChild("MainEvent", 10)
 
 -- State Variables
@@ -537,6 +515,16 @@ local CurrentTarget = nil
 local AimAssistLocked = false
 local TriggerBotActive = false
 local FlyingActive = false
+
+local function Notify(title, message, duration)
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = "[ZERO.XYZ] " .. title,
+            Text = message,
+            Duration = duration or 2,
+        })
+    end)
+end
 
 ----------------------------------------------------------------------------------------
 -- UNIVERSAL ANTI-CHEAT PURGE (DYNAMIC PATTERN DETECTION & SPAWN PURGE)
@@ -567,40 +555,66 @@ end
 if LocalPlayer.Character then NeutralizeCharacterAntiCheat(LocalPlayer.Character) end
 LocalPlayer.CharacterAdded:Connect(NeutralizeCharacterAntiCheat)
 
--- Metamethod Hook for MainEvent Checkers
-local oldNamecall = nil
-local oldIndex = nil
+----------------------------------------------------------------------------------------
+-- TARGET ACQUISITION & PREDICTION ENGINE
+----------------------------------------------------------------------------------------
+local function CalculatePredictedPosition(targetPart, predictionConfig)
+    if not targetPart then return Vector3.zero end
+    local vel = targetPart.Velocity
+    local predX = (predictionConfig and predictionConfig.X) or 0.138
+    local predY = (predictionConfig and predictionConfig.Y) or 0.138
+    local predZ = (predictionConfig and predictionConfig.Z) or 0.138
+    return targetPart.Position + Vector3.new(vel.X * predX, vel.Y * predY, vel.Z * predZ)
+end
 
-local function GetSilentAimHitPart()
-    local target = CurrentTarget
-    if not target or not target.Character then
-        local maxDist = Config['Silent Aim'].Distance
-        local scanRadius = Config['Silent Aim'].FOV.Scan
-        local shortestDist = scanRadius or math.huge
-        local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+local function IsValidTarget(player)
+    if not player or player == LocalPlayer then return false end
+    local char = player.Character
+    if not char then return false end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hum or not hrp or hum.Health <= 0 then return false end
 
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                local hum = player.Character:FindFirstChildOfClass("Humanoid")
-                local hrp = player.Character.HumanoidRootPart
-                if hum and hum.Health > 0 then
-                    local be = player.Character:FindFirstChild("BodyEffects")
-                    local isKnocked = be and be:FindFirstChild("K.O") and be["K.O"].Value == true
-                    local isGrabbed = be and be:FindFirstChild("Grabbed") and be.Grabbed.Value ~= nil
-                    if not (Config.General.Checks.Knocked and isKnocked) and not (Config.General.Checks.Grabbed and isGrabbed) then
-                        local screenPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
-                        if onScreen then
-                            local d = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
-                            local worldD = (hrp.Position - Camera.CFrame.Position).Magnitude
-                            if d < shortestDist and worldD <= maxDist then
-                                shortestDist = d
-                                target = player
-                            end
-                        end
-                    end
+    local be = char:FindFirstChild("BodyEffects")
+    if Config.General.Checks.Knocked and be and be:FindFirstChild("K.O") and be["K.O"].Value == true then
+        return false
+    end
+    if Config.General.Checks.Grabbed and be and be:FindFirstChild("Grabbed") and be.Grabbed.Value ~= nil then
+        return false
+    end
+    if Config.General.Checks.Forcefield and char:FindFirstChildOfClass("ForceField") then
+        return false
+    end
+
+    return true
+end
+
+local function GetClosestTargetToMouse(maxRadius)
+    local shortestDist = maxRadius or math.huge
+    local chosenPlayer = nil
+    local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if IsValidTarget(player) then
+            local hrp = player.Character.HumanoidRootPart
+            local screenPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+            if onScreen then
+                local dist = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                local worldDist = (hrp.Position - Camera.CFrame.Position).Magnitude
+                if dist < shortestDist and worldDist <= (Config['Silent Aim'].Distance or 10000) then
+                    shortestDist = dist
+                    chosenPlayer = player
                 end
             end
         end
+    end
+    return chosenPlayer
+end
+
+local function GetSilentAimHitPart()
+    local target = CurrentTarget
+    if not IsValidTarget(target) then
+        target = GetClosestTargetToMouse(Config['Silent Aim'].FOV.Scan or 280)
     end
 
     if target and target.Character then
@@ -611,15 +625,9 @@ local function GetSilentAimHitPart()
     return nil, nil
 end
 
-local function CalculatePredictedPosition(targetPart, predictionConfig)
-    if not targetPart then return Vector3.zero end
-    local vel = targetPart.Velocity
-    local predX = predictionConfig.X or 0.138
-    local predY = predictionConfig.Y or 0.138
-    local predZ = predictionConfig.Z or 0.138
-    return targetPart.Position + Vector3.new(vel.X * predX, vel.Y * predY, vel.Z * predZ)
-end
-
+----------------------------------------------------------------------------------------
+-- METAMETHOD HOOKS (SILENT AIM & ANTI-CHEAT SHIELD)
+----------------------------------------------------------------------------------------
 local BlockedCheckers = {
     ["CHECKER_1"] = true,
     ["CHECKER_2"] = true,
@@ -630,27 +638,31 @@ local BlockedCheckers = {
     ["Ban"] = true,
 }
 
+local oldNamecall = nil
+local oldIndex = nil
+
 oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
 
     if self == MainEvent and method == "FireServer" then
         local eventName = tostring(args[1])
+        local eventLower = eventName:lower()
 
         -- Block all AC traps completely
         if BlockedCheckers[eventName] then
             return nil
         end
 
-        -- Silent Aim Redirection
+        -- Silent Aim Interception (Supports UpdateMousePos, UpdateMousePosI2, ShootGun)
         if Config['Silent Aim'].Enabled and not checkcaller() then
-            if eventName == "UpdateMousePos" then
+            if eventLower:find("updatemousepos") or eventName == "UpdateMousePosI2" or eventName == "UpdateMousePos" then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     args[2] = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     return oldNamecall(self, unpack(args))
                 end
-            elseif eventName == "ShootGun" then
+            elseif eventName == "ShootGun" or eventLower:find("shoot") then
                 local part, target = GetSilentAimHitPart()
                 if part then
                     local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
@@ -668,13 +680,16 @@ end))
 
 oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
     if not checkcaller() and Config['Silent Aim'].Enabled then
-        if self == Mouse and (key == "Hit" or key == "Target") then
-            local part, target = GetSilentAimHitPart()
-            if part then
-                local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
-                if key == "Hit" then
+        if typeof(self) == "Instance" and (self:IsA("Mouse") or self:IsA("PlayerMouse") or tostring(self) == "Mouse") then
+            if key == "Hit" or key == "hit" then
+                local part, target = GetSilentAimHitPart()
+                if part then
+                    local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     return CFrame.new(predicted)
-                elseif key == "Target" then
+                end
+            elseif key == "Target" or key == "target" then
+                local part, target = GetSilentAimHitPart()
+                if part then
                     return part
                 end
             end
@@ -684,7 +699,7 @@ oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
 end))
 
 ----------------------------------------------------------------------------------------
--- DRAWING FOV & VISUAL OVERLAYS (BRAND: ZERO.XYZ)
+-- VISUALS: DRAWING FOV & TARGET LINE
 ----------------------------------------------------------------------------------------
 local FOVCircle = nil
 local TargetLine = nil
@@ -695,19 +710,21 @@ if Drawing then
         FOVCircle.Thickness = 1.5
         FOVCircle.NumSides = 64
         FOVCircle.Filled = false
-        FOVCircle.Transparency = 1
-        FOVCircle.Color = Color3.fromRGB(255, 255, 255)
+        FOVCircle.Transparency = 0.8
+        FOVCircle.Color = Color3.fromRGB(0, 230, 255)
         FOVCircle.Visible = false
 
         TargetLine = Drawing.new("Line")
         TargetLine.Thickness = 1.5
-        TargetLine.Transparency = 1
-        TargetLine.Color = Color3.fromRGB(255, 255, 255)
+        TargetLine.Transparency = 0.9
+        TargetLine.Color = Color3.fromRGB(0, 230, 255)
         TargetLine.Visible = false
     end)
 end
 
--- Watermark & Hotkey HUD
+----------------------------------------------------------------------------------------
+-- HUD & HOTKEY DISPLAY
+----------------------------------------------------------------------------------------
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ZERO_Overlay"
 ScreenGui.ResetOnSpawn = false
@@ -726,11 +743,11 @@ local WatermarkLabel = Instance.new("TextLabel")
 WatermarkLabel.Name = "Watermark"
 WatermarkLabel.Parent = ScreenGui
 WatermarkLabel.BackgroundTransparency = 1
-WatermarkLabel.Position = UDim2.new(0, 15, 0, 15)
-WatermarkLabel.Size = UDim2.new(0, 200, 0, 20)
+WatermarkLabel.Position = UDim2.new(0, 18, 0, 18)
+WatermarkLabel.Size = UDim2.new(0, 250, 0, 20)
 WatermarkLabel.Font = Enum.Font.Code
-WatermarkLabel.Text = Config.General['Show Hotkeys'].Watermark
-WatermarkLabel.TextColor3 = Config.General['Show Hotkeys']['Brand Color']
+WatermarkLabel.Text = Config.General['Show Hotkeys'].Watermark or "zero.xyz | stealth engine"
+WatermarkLabel.TextColor3 = Config.General['Show Hotkeys']['Watermark Color'] or Color3.fromRGB(0, 230, 255)
 WatermarkLabel.TextSize = 14
 WatermarkLabel.TextXAlignment = Enum.TextXAlignment.Left
 WatermarkLabel.Visible = Config.General['Show Hotkeys'].Enabled
@@ -739,11 +756,11 @@ local HotkeyList = Instance.new("TextLabel")
 HotkeyList.Name = "HotkeyList"
 HotkeyList.Parent = ScreenGui
 HotkeyList.BackgroundTransparency = 1
-HotkeyList.Position = UDim2.new(0, 15, 0, 40)
-HotkeyList.Size = UDim2.new(0, 300, 0, 150)
+HotkeyList.Position = UDim2.new(0, 18, 0, 42)
+HotkeyList.Size = UDim2.new(0, 320, 0, 220)
 HotkeyList.Font = Enum.Font.Code
 HotkeyList.Text = ""
-HotkeyList.TextColor3 = Config.General['Show Hotkeys']['Feature Color']
+HotkeyList.TextColor3 = Config.General['Show Hotkeys']['Feature Color'] or Color3.fromRGB(255, 255, 255)
 HotkeyList.TextSize = 12
 HotkeyList.TextXAlignment = Enum.TextXAlignment.Left
 HotkeyList.TextYAlignment = Enum.TextYAlignment.Top
@@ -757,38 +774,42 @@ local function UpdateHotkeyHUD()
     end
     WatermarkLabel.Visible = true
     HotkeyList.Visible = true
-    local text = "--- [ ZERO.XYZ BINDS ] ---\n"
-    for name, bind in pairs(Config.General.Binds) do
-        text = text .. string.format("[%s] : %s\n", string.upper(bind), name)
-    end
-    if CurrentTarget then
-        local hp = 0
-        if CurrentTarget.Character and CurrentTarget.Character:FindFirstChild("Humanoid") then
-            hp = CurrentTarget.Character.Humanoid.Health
-        end
-        text = text .. string.format("\nTarget: %s (%d HP)", CurrentTarget.Name, math.floor(hp))
+
+    local binds = Config.General.Binds
+    local text = "--- [ ZERO.XYZ ACTIVE BINDS ] ---\n"
+    text = text .. string.format("[%s] Aim Assist: %s\n", string.upper(binds['Aim Bot Target']), AimAssistLocked and "LOCKED" or "OFF")
+    text = text .. string.format("[%s] Walk Speed: %s (%d)\n", string.upper(binds['Walk Speed']), Config['Player Modifications'].Speed.Enabled and "ON" or "OFF", Config['Player Modifications'].Speed.Default.Value)
+    text = text .. string.format("[%s] Flying:     %s\n", string.upper(binds['Fly']), FlyingActive and "ON" or "OFF")
+    text = text .. string.format("[%s] ESP:        %s\n", string.upper(binds['ESP']), Config.ESP.Enabled and "ON" or "OFF")
+    text = text .. string.format("[%s] Hitboxes:   %s (%d)\n", "HB", Config['Hitbox Expander'].Enabled and "ON" or "OFF", Config['Hitbox Expander'].Size)
+    text = text .. string.format("[%s] Silent Aim: %s\n", string.upper(binds['Silent Aim Target']), Config['Silent Aim'].Enabled and "AUTO" or "OFF")
+
+    if CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChildOfClass("Humanoid") then
+        local hp = CurrentTarget.Character:FindFirstChildOfClass("Humanoid").Health
+        text = text .. string.format("\n[TARGET]: %s (%d HP)", CurrentTarget.DisplayName or CurrentTarget.Name, math.floor(hp))
+    else
+        text = text .. "\n[TARGET]: Closest In FOV"
     end
     HotkeyList.Text = text
 end
-UpdateHotkeyHUD()
 
 ----------------------------------------------------------------------------------------
--- COMBAT ENGINE: AIM ASSIST & TARGETING
+-- COMBAT RUNTIME: AIM ASSIST & FOV TRACKING
 ----------------------------------------------------------------------------------------
 RunService.RenderStepped:Connect(function()
-    -- Silent Aim FOV Circle Visualizer
+    -- FOV Circle
     if FOVCircle then
         local fovConfig = Config['Silent Aim'].FOV
         if fovConfig.Enabled and fovConfig.Visible then
             FOVCircle.Visible = true
-            FOVCircle.Radius = fovConfig.Scan
+            FOVCircle.Radius = fovConfig.Scan or 280
             FOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
         else
             FOVCircle.Visible = false
         end
     end
 
-    -- Aim Assist Smooth Camera Lerp
+    -- Aim Assist Smooth Camera Lock
     if Config['Aim Assist'].Enabled and AimAssistLocked and CurrentTarget and CurrentTarget.Character then
         local hitPartName = Config['Aim Assist']['Hit Part']
         local part = CurrentTarget.Character:FindFirstChild(hitPartName) or CurrentTarget.Character:FindFirstChild("HumanoidRootPart")
@@ -796,26 +817,22 @@ RunService.RenderStepped:Connect(function()
             local predPos = CalculatePredictedPosition(part, Config['Aim Assist'].Prediction)
             local currentCF = Camera.CFrame
             local targetCF = CFrame.new(currentCF.Position, predPos)
-            local smoothness = math.clamp(1 - Config['Aim Assist'].Smoothness, 0.01, 1)
-            Camera.CFrame = currentCF:Lerp(targetCF, smoothness)
+            local smooth = math.clamp(1 - (Config['Aim Assist'].Smoothness or 0.85), 0.05, 1)
+            Camera.CFrame = currentCF:Lerp(targetCF, smooth)
         end
     end
 
-    -- Target Line Tracer
+    -- Target Tracer Line
     if TargetLine then
         local lineConfig = Config['Silent Aim']['Target Line']
-        if lineConfig.Enabled and CurrentTarget and CurrentTarget.Character then
-            local part = CurrentTarget.Character:FindFirstChild("HumanoidRootPart")
-            if part then
-                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
-                if onScreen then
-                    TargetLine.Visible = true
-                    TargetLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                    TargetLine.To = Vector2.new(screenPos.X, screenPos.Y)
-                    TargetLine.Color = lineConfig.Regular
-                else
-                    TargetLine.Visible = false
-                end
+        local part, target = GetSilentAimHitPart()
+        if lineConfig.Enabled and part and target then
+            local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+            if onScreen then
+                TargetLine.Visible = true
+                TargetLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                TargetLine.To = Vector2.new(screenPos.X, screenPos.Y)
+                TargetLine.Color = (target == CurrentTarget) and lineConfig['In FOV'] or lineConfig.Regular
             else
                 TargetLine.Visible = false
             end
@@ -826,7 +843,7 @@ RunService.RenderStepped:Connect(function()
 end)
 
 ----------------------------------------------------------------------------------------
--- TRIGGER BOT LOOP
+-- TRIGGER BOT ENGINE
 ----------------------------------------------------------------------------------------
 task.spawn(function()
     while true do
@@ -835,7 +852,7 @@ task.spawn(function()
             local target = Mouse.Target
             if target and target.Parent then
                 local player = Players:GetPlayerFromCharacter(target.Parent) or Players:GetPlayerFromCharacter(target.Parent.Parent)
-                if player and player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+                if player and IsValidTarget(player) then
                     local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
                     if tool then
                         tool:Activate()
@@ -847,7 +864,67 @@ task.spawn(function()
 end)
 
 ----------------------------------------------------------------------------------------
--- UNDETECTED MOVEMENT ENGINE (CFrame & Velocity Step)
+-- HITBOX EXPANDER ENGINE
+----------------------------------------------------------------------------------------
+task.spawn(function()
+    while true do
+        task.wait(0.4)
+        local hbConfig = Config['Hitbox Expander']
+        if hbConfig and hbConfig.Enabled then
+            local size = hbConfig.Size or 24
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer and player.Character then
+                    local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        hrp.Size = Vector3.new(size, size, size)
+                        hrp.Transparency = 0.75
+                        hrp.CanCollide = false
+                    end
+                end
+            end
+        end
+    end
+end)
+
+----------------------------------------------------------------------------------------
+-- WEAPON MODIFICATIONS (COOLDOWN CHANGER & SPREAD)
+----------------------------------------------------------------------------------------
+local function ApplyWeaponMods(tool)
+    if not tool or not tool:IsA("Tool") then return end
+    local toolName = tool.Name
+
+    -- Delay Changer
+    if Config['Weapon Modifications']['Delay Changer'].Enabled then
+        local dc = Config['Weapon Modifications']['Delay Changer'][toolName]
+        if dc and dc.Value then
+            local cooldown = tool:FindFirstChild("ShootingCooldown")
+            if cooldown and cooldown:IsA("NumberValue") then
+                cooldown.Value = dc.Value
+            end
+        end
+    end
+
+    -- Infinite Range
+    if Config['Das Hood'] and Config['Das Hood']['Infinite Range'] and Config['Das Hood']['Infinite Range'].Enabled then
+        local range = tool:FindFirstChild("Range")
+        if range and range:IsA("NumberValue") then
+            range.Value = Config['Das Hood']['Infinite Range'].Range or 100000
+        end
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    char.ChildAdded:Connect(ApplyWeaponMods)
+end)
+if LocalPlayer.Character then
+    LocalPlayer.Character.ChildAdded:Connect(ApplyWeaponMods)
+    for _, t in ipairs(LocalPlayer.Character:GetChildren()) do ApplyWeaponMods(t) end
+end
+for _, t in ipairs(LocalPlayer.Backpack:GetChildren()) do ApplyWeaponMods(t) end
+LocalPlayer.Backpack.ChildAdded:Connect(ApplyWeaponMods)
+
+----------------------------------------------------------------------------------------
+-- UNDETECTED MOVEMENT ENGINE (WALKSPEED & FLIGHT)
 ----------------------------------------------------------------------------------------
 RunService.Heartbeat:Connect(function(dt)
     local char = LocalPlayer.Character
@@ -861,14 +938,23 @@ RunService.Heartbeat:Connect(function(dt)
         hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
     end
 
-    -- UD WalkSpeed via Velocity direction
-    if Config['Player Modifications'].Speed.Enabled and hum and hrp then
-        local desiredSpeed = Config['Player Modifications'].Speed.Default.Value
+    -- Anti Stomp
+    if Config['Player Modifications']['Anti Stomp'] then
+        local be = char:FindFirstChild("BodyEffects")
+        if be and be:FindFirstChild("K.O") and be["K.O"].Value == true and hrp then
+            hrp.CFrame = hrp.CFrame + Vector3.new(0, 75, 0)
+            hrp.Velocity = Vector3.zero
+        end
+    end
+
+    -- Undetected WalkSpeed
+    if Config['Player Modifications'].Speed.Enabled and hum and hrp and not FlyingActive then
+        local desiredSpeed = Config['Player Modifications'].Speed.Default.Value or 75
         local bodyEffects = char:FindFirstChild("BodyEffects")
         if bodyEffects and bodyEffects:FindFirstChild("Reload") and bodyEffects.Reload.Value == true then
-            desiredSpeed = Config['Player Modifications'].Speed.Reloading.Value
+            desiredSpeed = Config['Player Modifications'].Speed.Reloading.Value or desiredSpeed
         elseif hum.Health < 30 then
-            desiredSpeed = Config['Player Modifications'].Speed['Low Health'].Value
+            desiredSpeed = Config['Player Modifications'].Speed['Low Health'].Value or desiredSpeed
         end
 
         local moveDir = hum.MoveDirection
@@ -877,14 +963,10 @@ RunService.Heartbeat:Connect(function(dt)
         end
     end
 
-    -- Jump Power
-    if Config['Player Modifications']['Jump Power'].Enabled and hum then
-        hum.JumpPower = Config['Player Modifications']['Jump Power'].Value
-    end
-
-    -- UD Flight (CFrame step translation)
-    if FlyingActive and hrp then
-        local flySpeed = Config['Player Modifications'].Flying.Speed
+    -- Undetected Flight
+    if FlyingActive and hrp and hum then
+        hum.PlatformStand = true
+        local flySpeed = Config['Player Modifications'].Flying.Speed or 110
         local move = Vector3.zero
         if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + Camera.CFrame.LookVector end
         if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - Camera.CFrame.LookVector end
@@ -896,6 +978,10 @@ RunService.Heartbeat:Connect(function(dt)
         hrp.Velocity = Vector3.zero
         if move.Magnitude > 0 then
             hrp.CFrame = hrp.CFrame + (move.Unit * (flySpeed * dt))
+        end
+    else
+        if hum and hum.PlatformStand then
+            hum.PlatformStand = false
         end
     end
 end)
@@ -924,6 +1010,7 @@ local function SortInventory()
             tool.Parent = backpack
         end
     end
+    Notify("INVENTORY", "Weapons sorted successfully")
 end
 
 ----------------------------------------------------------------------------------------
@@ -940,12 +1027,12 @@ local function CreateESP(player)
     }
     box.Box.Thickness = 1.5
     box.Box.Filled = false
-    box.Box.Color = Config.Visualization['Global ESP'].Drawing.Boxes.Corner.Color
+    box.Box.Color = Config.Visualization['Global ESP'].Drawing.Boxes.Corner.Color or Color3.fromRGB(0, 230, 255)
 
-    box.Name.Size = Config.Visualization['Global ESP']['Text Size']
+    box.Name.Size = Config.Visualization['Global ESP']['Text Size'] or 13
     box.Name.Center = true
     box.Name.Outline = true
-    box.Name.Color = Config.Visualization['Global ESP'].Drawing.Names.Color
+    box.Name.Color = Config.Visualization['Global ESP'].Drawing.Names.Color or Color3.fromRGB(255, 255, 255)
 
     box.Health.Thickness = 2
     box.Health.Color = Color3.fromRGB(0, 255, 0)
@@ -988,14 +1075,14 @@ RunService.RenderStepped:Connect(function()
                     esp.Box.Position = boxPos
                     esp.Box.Visible = true
 
-                    esp.Name.Text = player.DisplayName or player.Name
+                    esp.Name.Text = string.format("%s [%dm]", player.DisplayName or player.Name, math.floor((hrp.Position - Camera.CFrame.Position).Magnitude))
                     esp.Name.Position = Vector2.new(boxPos.X + boxSize.X / 2, boxPos.Y - 16)
                     esp.Name.Visible = true
 
                     local healthPercent = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
                     esp.Health.From = Vector2.new(boxPos.X - 4, boxPos.Y + boxSize.Y)
                     esp.Health.To = Vector2.new(boxPos.X - 4, boxPos.Y + boxSize.Y - (boxSize.Y * healthPercent))
-                    esp.Health.Color = Color3.fromRGB(255 * (1 - healthPercent), 255 * healthPercent, 0)
+                    esp.Health.Color = Color3.fromRGB(math.floor(255 * (1 - healthPercent)), math.floor(255 * healthPercent), 0)
                     esp.Health.Visible = true
                 else
                     esp.Box.Visible = false
@@ -1030,10 +1117,16 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if AimAssistLocked then
             AimAssistLocked = false
             CurrentTarget = nil
+            Notify("AIM ASSIST", "Unlocked")
         else
             local _, t = GetSilentAimHitPart()
             CurrentTarget = t
             AimAssistLocked = (CurrentTarget ~= nil)
+            if AimAssistLocked then
+                Notify("AIM ASSIST", "Locked onto " .. CurrentTarget.Name)
+            else
+                Notify("AIM ASSIST", "No target in FOV")
+            end
         end
         UpdateHotkeyHUD()
     end
@@ -1042,10 +1135,15 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if key == binds['Silent Aim Target']:lower() then
         local _, t = GetSilentAimHitPart()
         CurrentTarget = t
+        if CurrentTarget then
+            Notify("TARGET", "Selected: " .. CurrentTarget.Name)
+        else
+            Notify("TARGET", "Auto Mode (Closest)")
+        end
         UpdateHotkeyHUD()
     end
 
-    -- Trigger Bot Hold / Toggle
+    -- Trigger Bot Hold
     if key == binds['Trigger Bot']:lower() then
         TriggerBotActive = true
     end
@@ -1053,22 +1151,34 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     -- WalkSpeed Toggle
     if key == binds['Walk Speed']:lower() then
         Config['Player Modifications'].Speed.Enabled = not Config['Player Modifications'].Speed.Enabled
+        Notify("WALK SPEED", Config['Player Modifications'].Speed.Enabled and ("ENABLED (" .. Config['Player Modifications'].Speed.Default.Value .. ")") or "DISABLED")
+        UpdateHotkeyHUD()
     end
 
     -- Jump Power Toggle
     if key == binds['Jump Power']:lower() then
         Config['Player Modifications']['Jump Power'].Enabled = not Config['Player Modifications']['Jump Power'].Enabled
+        local jp = Config['Player Modifications']['Jump Power'].Enabled and Config['Player Modifications']['Jump Power'].Value or 50
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum.JumpPower = jp end
+        Notify("JUMP POWER", Config['Player Modifications']['Jump Power'].Enabled and ("ENABLED (" .. jp .. ")") or "DISABLED")
+        UpdateHotkeyHUD()
     end
 
     -- Fly Toggle
     if key == binds['Fly']:lower() then
         FlyingActive = not FlyingActive
+        Notify("FLY", FlyingActive and "ENABLED" or "DISABLED")
+        UpdateHotkeyHUD()
     end
 
     -- ESP Toggle
     if key == binds['ESP']:lower() then
         Config.ESP.Enabled = not Config.ESP.Enabled
         Config.Visualization['Global ESP'].Enabled = Config.ESP.Enabled
+        Notify("ESP", Config.ESP.Enabled and "ENABLED" or "DISABLED")
+        UpdateHotkeyHUD()
     end
 
     -- Inventory Sorter
@@ -1086,4 +1196,6 @@ UserInputService.InputEnded:Connect(function(input, gameProcessed)
     end
 end)
 
+UpdateHotkeyHUD()
+Notify("LOADED", "zero.xyz Stealth Engine Ready!", 3)
 print("[ZERO.XYZ] Public Release Loaded — 100% Undetected!")
