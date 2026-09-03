@@ -22,9 +22,9 @@ if not userKey or not VALID_KEYS[tostring(userKey)] then
     return
 end
 
--- ZERO.XYZ PUBLIC CONFIGURATION RESOLUTION
--- Automatically inherits from shared["zero.xyz"], shared.Zero, or shared.Ecco
-local UserProvidedConfig = shared["zero.xyz"] or shared.Zero or shared.Ecco
+-- ZERO.XYZ CONFIGURATION INHERITANCE
+-- Resolves user table: shared.Zero, shared["zero.xyz"], or shared.Ecco
+local UserProvidedConfig = shared.Zero or shared["zero.xyz"] or shared.Ecco
 
 local DefaultConfig = {
     ['General'] = {
@@ -47,11 +47,11 @@ local DefaultConfig = {
         },
 
         ['Show Hotkeys'] = {
-            ['Enabled']         = true,
+            ['Enabled']         = false,
             ['Brand Color']     = Color3.fromRGB(255, 255, 255),
             ['Feature Color']   = Color3.fromRGB(255, 255, 255),
             ['Target Color']    = Color3.fromRGB(100, 255, 100),
-            ['Watermark']       = 'ZERO.XYZ ON TOP',
+            ['Watermark']       = 'zero.xyz on top',
             ['Watermark Color'] = Color3.fromRGB(0, 0, 0),
         },
 
@@ -512,9 +512,9 @@ end
 
 local Config = DeepMerge(DefaultConfig, UserProvidedConfig or {})
 
--- Sync back to all global handles
-shared["zero.xyz"] = Config
+-- Sync to all global config handles
 shared.Zero = Config
+shared["zero.xyz"] = Config
 shared.Ecco = Config
 
 ----------------------------------------------------------------------------------------
@@ -544,7 +544,6 @@ local FlyingActive = false
 local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
     task.spawn(function()
-        -- Instant sweep of randomized local scripts
         for _, obj in ipairs(char:GetDescendants()) do
             if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
                 pcall(function()
