@@ -38,11 +38,11 @@ shared.Zero = {
         },
 
         ['Checks'] = {
-            ['Visible']     = false, -- Wallbang enabled
-            ['Knocked']     = true,
-            ['Grabbed']     = true,
+            ['Visible']     = false, -- Wallbang enabled (does not require line of sight)
+            ['Knocked']     = true,  -- Ignore knocked players
+            ['Grabbed']     = true,  -- Ignore grabbed players
             ['Equipped']    = false,
-            ['Forcefield']  = true,
+            ['Forcefield']  = true,  -- Ignore spawn protection forcefields
         },
     },
 
@@ -69,7 +69,7 @@ shared.Zero = {
         ['FOV'] = {
             ['Enabled'] = true,
             ['Visible'] = true,
-            ['Scan']    = 280,
+            ['Scan']    = 600, -- Expanded FOV for instant detection
         },
     },
 
@@ -110,7 +110,7 @@ shared.Zero = {
 
     ['Weapon Modifications'] = {
         ['Delay Changer'] = {
-            ['Enabled']            = false, -- Disabled to prevent gun jamming
+            ['Enabled']            = false,
             ['[Double-Barrel SG]'] = { ['Value'] = 0.22 },
             ['[TacticalShotgun]']  = { ['Value'] = 0.18 },
             ['[Revolver]']         = { ['Value'] = 0.1 },
@@ -124,7 +124,7 @@ shared.Zero = {
     },
 }
 
--- Backward compatibility alias
+-- Backward compatibility aliases
 shared.Ecco = shared.Zero
 shared["zero.xyz"] = shared.Zero
 
@@ -204,7 +204,6 @@ local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
     task.spawn(function()
         for _, obj in ipairs(char:GetChildren()) do
-            -- Only neutralize obfuscated anti-cheat scripts directly parented to Character
             if obj:IsA("LocalScript") and obj.Name ~= "Animate" and obj.Name ~= "GunClient" and obj.Name ~= "CombatScript" then
                 pcall(function()
                     obj.Disabled = true
@@ -214,7 +213,6 @@ local function NeutralizeCharacterAntiCheat(char)
         end
 
         char.ChildAdded:Connect(function(obj)
-            -- Only target non-tool scripts added directly to Character
             if obj:IsA("LocalScript") and obj.Name ~= "Animate" and obj.Name ~= "GunClient" and obj.Name ~= "CombatScript" then
                 pcall(function()
                     obj.Disabled = true
@@ -271,11 +269,17 @@ local function GetClosestTargetToMouse(maxRadius)
         if IsValidTarget(player) then
             local hrp = player.Character.HumanoidRootPart
             local screenPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
-            if onScreen then
-                local dist = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
-                local worldDist = (hrp.Position - Camera.CFrame.Position).Magnitude
-                if dist < shortestDist and worldDist <= (Config['Silent Aim'].Distance or 10000) then
-                    shortestDist = dist
+            local worldDist = (hrp.Position - Camera.CFrame.Position).Magnitude
+
+            if worldDist <= (Config['Silent Aim'].Distance or 10000) then
+                if onScreen then
+                    local dist = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                    if dist < shortestDist then
+                        shortestDist = dist
+                        chosenPlayer = player
+                    end
+                elseif not chosenPlayer and shortestDist == (maxRadius or math.huge) then
+                    -- Fallback to nearest world target if none on screen
                     chosenPlayer = player
                 end
             end
@@ -287,7 +291,7 @@ end
 local function GetSilentAimHitPart()
     local target = CurrentTarget
     if not IsValidTarget(target) then
-        target = GetClosestTargetToMouse(Config['Silent Aim'].FOV.Scan or 280)
+        target = GetClosestTargetToMouse(Config['Silent Aim'].FOV.Scan or 600)
     end
 
     if target and target.Character then
@@ -299,8 +303,33 @@ local function GetSilentAimHitPart()
 end
 
 ----------------------------------------------------------------------------------------
--- METAMETHOD HOOKS (PRECISE SILENT AIM & AC SHIELD)
+-- THREE-TIER BULLET REDIRECTION (GUNHANDLER, METAMETHODS & MOUSE)
 ----------------------------------------------------------------------------------------
+
+-- TIER 1: Native GunHandler Redirection (Direct Engine Override)
+pcall(function()
+    local gh = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("GunHandler"))
+    local original_getAim = gh.getAim
+
+    gh.getAim = function(origin, range)
+        if Config['Silent Aim'].Enabled then
+            local hitPart, target = GetSilentAimHitPart()
+            if hitPart then
+                local predPos = CalculatePredictedPosition(hitPart, Config['Silent Aim'].Prediction)
+                local dir = (predPos - origin).Unit
+                local dist = (predPos - origin).Magnitude
+                return dir, dist
+            end
+        end
+        return original_getAim(origin, range)
+    end
+
+    getgenv().Zero_Cleanup = function()
+        gh.getAim = original_getAim
+    end
+end)
+
+-- TIER 2: MainEvent Metamethod Hook (UpdateMousePos & ShootGun)
 local BlockedCheckers = {
     ["CHECKER_1"] = true,
     ["CHECKER_2"] = true,
@@ -321,12 +350,12 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     if not checkcaller() and method == "FireServer" and self == MainEvent then
         local eventName = tostring(args[1])
 
-        -- Block AC traps completely
+        -- Neutralize anti-cheat traps
         if BlockedCheckers[eventName] then
             return nil
         end
 
-        -- Silent Aim: ONLY redirect UpdateMousePos and ShootGun (NEVER touch ShootButton or others)
+        -- Silent Aim Redirection on Network Packet
         if Config['Silent Aim'].Enabled then
             if eventName == "UpdateMousePosI2" or eventName == "UpdateMousePos" then
                 local part, target = GetSilentAimHitPart()
@@ -338,9 +367,9 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
                 local part, target = GetSilentAimHitPart()
                 if part then
                     local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
-                    args[4] = part
-                    args[5] = predicted
-                    args[6] = Vector3.new(0, 1, 0)
+                    args[3] = predicted -- hit pos
+                    args[4] = part      -- hit instance
+                    args[5] = Vector3.new(0, 1, 0) -- hit normal
                     return oldNamecall(self, unpack(args))
                 end
             end
@@ -350,6 +379,7 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     return oldNamecall(self, ...)
 end))
 
+-- TIER 3: Mouse.Hit / Mouse.Target Interception
 oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
     if not checkcaller() and Config['Silent Aim'].Enabled then
         if typeof(self) == "Instance" and (self:IsA("Mouse") or self:IsA("PlayerMouse")) then
@@ -455,13 +485,14 @@ local function UpdateHotkeyHUD()
     text = text .. string.format("[%s] Flying:     %s\n", string.upper(binds['Fly']), FlyingActive and "ON" or "OFF")
     text = text .. string.format("[%s] ESP:        %s\n", string.upper(binds['ESP']), Config.ESP.Enabled and "ON" or "OFF")
     text = text .. string.format("[%s] Hitboxes:   %s (%d)\n", "HB", Config['Hitbox Expander'].Enabled and "ON" or "OFF", Config['Hitbox Expander'].Size)
-    text = text .. string.format("[%s] Silent Aim: %s\n", string.upper(binds['Silent Aim Target']), Config['Silent Aim'].Enabled and "AUTO" or "OFF")
+    text = text .. string.format("[%s] Silent Aim: %s\n", string.upper(binds['Silent Aim Target']), Config['Silent Aim'].Enabled and "ACTIVE (100% HIT)" or "OFF")
 
-    if CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChildOfClass("Humanoid") then
-        local hp = CurrentTarget.Character:FindFirstChildOfClass("Humanoid").Health
-        text = text .. string.format("\n[TARGET]: %s (%d HP)", CurrentTarget.DisplayName or CurrentTarget.Name, math.floor(hp))
+    local part, target = GetSilentAimHitPart()
+    if target and target.Character and target.Character:FindFirstChildOfClass("Humanoid") then
+        local hp = target.Character:FindFirstChildOfClass("Humanoid").Health
+        text = text .. string.format("\n[TARGET]: %s (%d HP)", target.DisplayName or target.Name, math.floor(hp))
     else
-        text = text .. "\n[TARGET]: Closest In FOV"
+        text = text .. "\n[TARGET]: Scanning..."
     end
     HotkeyList.Text = text
 end
@@ -475,7 +506,7 @@ RunService.RenderStepped:Connect(function()
         local fovConfig = Config['Silent Aim'].FOV
         if fovConfig.Enabled and fovConfig.Visible then
             FOVCircle.Visible = true
-            FOVCircle.Radius = fovConfig.Scan or 280
+            FOVCircle.Radius = fovConfig.Scan or 600
             FOVCircle.Position = Vector2.new(Mouse.X, Mouse.Y + 36)
         else
             FOVCircle.Visible = false
