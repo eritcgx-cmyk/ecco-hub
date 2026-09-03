@@ -1,7 +1,7 @@
 --[[
     ========================================================================================
-    ZERO.XYZ — DA HOOD PUBLIC RELEASE (100% UNDETECTED)
-    Universal Configuration Table, Key Auth & Metamethod Defense Engine
+    ZERO.XYZ — DA HOOD COMPLETE STEALTH ENGINE (100% UNDETECTED)
+    Universal Public Configuration & Metamethod Defense Engine
     ========================================================================================
 ]]
 
@@ -22,9 +22,11 @@ if not userKey or not VALID_KEYS[tostring(userKey)] then
     return
 end
 
--- ZERO.XYZ PUBLIC CONFIGURATION TABLE
--- Edit this table directly or define shared["zero.xyz"] / shared.Zero before executing!
-shared["zero.xyz"] = shared["zero.xyz"] or shared.Zero or shared.Ecco or {
+-- ZERO.XYZ PUBLIC CONFIGURATION RESOLUTION
+-- Automatically inherits from shared["zero.xyz"], shared.Zero, or shared.Ecco
+local UserProvidedConfig = shared["zero.xyz"] or shared.Zero or shared.Ecco
+
+local DefaultConfig = {
     ['General'] = {
         ['Key'] = 'DoNotTouchThis',
         ['Multi Thread'] = true,
@@ -487,11 +489,33 @@ shared["zero.xyz"] = shared["zero.xyz"] or shared.Zero or shared.Ecco or {
     },
 }
 
--- Backward compatibility aliases
-shared.Zero = shared["zero.xyz"]
-shared.Ecco = shared["zero.xyz"]
+-- Deep merge user config over default config
+local function DeepMerge(default, user)
+    if type(user) ~= "table" then return default end
+    local merged = {}
+    for k, v in pairs(default) do
+        if type(v) == "table" and type(user[k]) == "table" then
+            merged[k] = DeepMerge(v, user[k])
+        elseif user[k] ~= nil then
+            merged[k] = user[k]
+        else
+            merged[k] = v
+        end
+    end
+    for k, v in pairs(user) do
+        if merged[k] == nil then
+            merged[k] = v
+        end
+    end
+    return merged
+end
 
-local Config = shared["zero.xyz"]
+local Config = DeepMerge(DefaultConfig, UserProvidedConfig or {})
+
+-- Sync back to all global handles
+shared["zero.xyz"] = Config
+shared.Zero = Config
+shared.Ecco = Config
 
 ----------------------------------------------------------------------------------------
 -- CORE INITIALIZATION & DEPENDENCIES
@@ -515,12 +539,12 @@ local TriggerBotActive = false
 local FlyingActive = false
 
 ----------------------------------------------------------------------------------------
--- UNIVERSAL ANTI-CHEAT PURGE (DYNAMIC STRING & PATTERN DETECTION)
+-- UNIVERSAL ANTI-CHEAT PURGE (DYNAMIC PATTERN DETECTION & SPAWN PURGE)
 ----------------------------------------------------------------------------------------
 local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
     task.spawn(function()
-        -- Scan all descendants dynamically to purge randomized name scripts (e.g. \x1F996082, )778104, etc.)
+        -- Instant sweep of randomized local scripts
         for _, obj in ipairs(char:GetDescendants()) do
             if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
                 pcall(function()
