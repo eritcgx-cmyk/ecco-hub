@@ -1,13 +1,30 @@
 --[[
     ========================================================================================
-    ZERO .CLUB — DA HOOD COMPLETE STEALTH SUITE (100% UNDETECTED)
-    Engineered for Volt & High-Tier Level 7/8 Luau Runtimes
+    ZERO.XYZ — DA HOOD COMPLETE STEALTH ENGINE (100% UNDETECTED)
+    Engineered for Volt & Modern Level 7/8 Luau Runtimes
     ========================================================================================
 ]]
 
-script_key = script_key or "fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"
+-- KEY AUTHENTICATION SYSTEM
+-- Configured keys or user-supplied script_key
+local VALID_KEYS = {
+    ["fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"] = true,
+    ["ZERO-FREE-KEY-2026"] = true,
+    ["ZERO-VIP-ALPHA"] = true,
+}
 
-shared.Zero = shared.Zero or {
+local userKey = getgenv().script_key or _G.script_key or script_key
+
+if not userKey or not VALID_KEYS[tostring(userKey)] then
+    pcall(function()
+        game:GetService("Players").LocalPlayer:Kick("\n\n[ZERO.XYZ - AUTH REJECTED]\nInvalid or missing script_key.\nJoin discord.gg/zero-xyz to get your key.\n")
+    end)
+    return
+end
+
+-- ZERO.XYZ PRIMARY CONFIGURATION TABLE
+-- Edit below table or configure shared["zero.xyz"] in your autoexec
+shared["zero.xyz"] = shared["zero.xyz"] or {
     ['General'] = {
         ['Key'] = 'DoNotTouchThis',
         ['Multi Thread'] = true,
@@ -32,7 +49,7 @@ shared.Zero = shared.Zero or {
             ['Brand Color']     = Color3.fromRGB(255, 255, 255),
             ['Feature Color']   = Color3.fromRGB(255, 255, 255),
             ['Target Color']    = Color3.fromRGB(100, 255, 100),
-            ['Watermark']       = 'ZERO ON TOP',
+            ['Watermark']       = 'ZERO.XYZ ON TOP',
             ['Watermark Color'] = Color3.fromRGB(0, 0, 0),
         },
 
@@ -346,7 +363,7 @@ shared.Zero = shared.Zero or {
                 },
                 ['Extension'] = {
                     ['Visible'] = false,
-                    ['Text']    = '.CLUB',
+                    ['Text']    = '.XYZ',
                     ['Color']   = Color3.fromRGB(180, 207, 227),
                 },
                 ['Current Target'] = {
@@ -470,8 +487,11 @@ shared.Zero = shared.Zero or {
     },
 }
 
--- Backward compatibility alias
-shared.Ecco = shared.Zero
+-- Backward compatibility aliases
+shared.Zero = shared["zero.xyz"]
+shared.Ecco = shared["zero.xyz"]
+
+local Config = shared["zero.xyz"]
 
 ----------------------------------------------------------------------------------------
 -- CORE INITIALIZATION & DEPENDENCIES
@@ -497,7 +517,6 @@ local FlyingActive = false
 ----------------------------------------------------------------------------------------
 -- ANTI-CHEAT NEUTRALIZATION (COMPLETE UNDETECTED SHIELD)
 ----------------------------------------------------------------------------------------
--- 1. Defuse client-side checker scripts
 local function NeutralizeLocalAC(char)
     if not char then return end
     task.spawn(function()
@@ -515,15 +534,15 @@ end
 if LocalPlayer.Character then NeutralizeLocalAC(LocalPlayer.Character) end
 LocalPlayer.CharacterAdded:Connect(NeutralizeLocalAC)
 
--- 2. Clean Metamethod Hook for MainEvent Checkers
+-- Metamethod Hook for MainEvent Checkers
 local oldNamecall = nil
 local oldIndex = nil
 
 local function GetSilentAimHitPart()
     local target = CurrentTarget
     if not target or not target.Character then
-        local maxDist = shared.Zero['Silent Aim'].Distance
-        local scanRadius = shared.Zero['Silent Aim'].FOV.Scan
+        local maxDist = Config['Silent Aim'].Distance
+        local scanRadius = Config['Silent Aim'].FOV.Scan
         local shortestDist = scanRadius or math.huge
         local mousePos = Vector2.new(Mouse.X, Mouse.Y)
 
@@ -532,11 +551,10 @@ local function GetSilentAimHitPart()
                 local hum = player.Character:FindFirstChildOfClass("Humanoid")
                 local hrp = player.Character.HumanoidRootPart
                 if hum and hum.Health > 0 then
-                    -- Check Knocked / Grabbed
                     local be = player.Character:FindFirstChild("BodyEffects")
                     local isKnocked = be and be:FindFirstChild("K.O") and be["K.O"].Value == true
                     local isGrabbed = be and be:FindFirstChild("Grabbed") and be.Grabbed.Value ~= nil
-                    if not (shared.Zero.General.Checks.Knocked and isKnocked) and not (shared.Zero.General.Checks.Grabbed and isGrabbed) then
+                    if not (Config.General.Checks.Knocked and isKnocked) and not (Config.General.Checks.Grabbed and isGrabbed) then
                         local screenPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
                         if onScreen then
                             local d = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
@@ -553,7 +571,7 @@ local function GetSilentAimHitPart()
     end
 
     if target and target.Character then
-        local hitPartName = shared.Zero['Silent Aim']['Hit Part']
+        local hitPartName = Config['Silent Aim']['Hit Part']
         local part = target.Character:FindFirstChild(hitPartName) or target.Character:FindFirstChild("Head") or target.Character:FindFirstChild("HumanoidRootPart")
         return part, target
     end
@@ -569,7 +587,6 @@ local function CalculatePredictedPosition(targetPart, predictionConfig)
     return targetPart.Position + Vector3.new(vel.X * predX, vel.Y * predY, vel.Z * predZ)
 end
 
--- Block ALL Da Hood Anti-Cheat Checker remotes
 local BlockedCheckers = {
     ["CHECKER_1"] = true,
     ["CHECKER_2"] = true,
@@ -587,23 +604,23 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     if self == MainEvent and method == "FireServer" then
         local eventName = tostring(args[1])
 
-        -- Block AC reports entirely
+        -- Block AC traps completely
         if BlockedCheckers[eventName] then
             return nil
         end
 
         -- Silent Aim Redirection
-        if shared.Zero['Silent Aim'].Enabled and not checkcaller() then
+        if Config['Silent Aim'].Enabled and not checkcaller() then
             if eventName == "UpdateMousePos" then
                 local part, target = GetSilentAimHitPart()
                 if part then
-                    args[2] = CalculatePredictedPosition(part, shared.Zero['Silent Aim'].Prediction)
+                    args[2] = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     return oldNamecall(self, unpack(args))
                 end
             elseif eventName == "ShootGun" then
                 local part, target = GetSilentAimHitPart()
                 if part then
-                    local predicted = CalculatePredictedPosition(part, shared.Zero['Silent Aim'].Prediction)
+                    local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                     args[4] = part
                     args[5] = predicted
                     args[6] = Vector3.new(0, 1, 0)
@@ -617,11 +634,11 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
 end))
 
 oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
-    if not checkcaller() and shared.Zero['Silent Aim'].Enabled then
+    if not checkcaller() and Config['Silent Aim'].Enabled then
         if self == Mouse and (key == "Hit" or key == "Target") then
             local part, target = GetSilentAimHitPart()
             if part then
-                local predicted = CalculatePredictedPosition(part, shared.Zero['Silent Aim'].Prediction)
+                local predicted = CalculatePredictedPosition(part, Config['Silent Aim'].Prediction)
                 if key == "Hit" then
                     return CFrame.new(predicted)
                 elseif key == "Target" then
@@ -634,7 +651,7 @@ oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
 end))
 
 ----------------------------------------------------------------------------------------
--- DRAWING FOV & VISUAL OVERLAYS (BRAND: ZERO)
+-- DRAWING FOV & VISUAL OVERLAYS (BRAND: ZERO.XYZ)
 ----------------------------------------------------------------------------------------
 local FOVCircle = nil
 local TargetLine = nil
@@ -679,11 +696,11 @@ WatermarkLabel.BackgroundTransparency = 1
 WatermarkLabel.Position = UDim2.new(0, 15, 0, 15)
 WatermarkLabel.Size = UDim2.new(0, 200, 0, 20)
 WatermarkLabel.Font = Enum.Font.Code
-WatermarkLabel.Text = shared.Zero.General['Show Hotkeys'].Watermark
-WatermarkLabel.TextColor3 = shared.Zero.General['Show Hotkeys']['Brand Color']
+WatermarkLabel.Text = Config.General['Show Hotkeys'].Watermark
+WatermarkLabel.TextColor3 = Config.General['Show Hotkeys']['Brand Color']
 WatermarkLabel.TextSize = 14
 WatermarkLabel.TextXAlignment = Enum.TextXAlignment.Left
-WatermarkLabel.Visible = shared.Zero.General['Show Hotkeys'].Enabled
+WatermarkLabel.Visible = Config.General['Show Hotkeys'].Enabled
 
 local HotkeyList = Instance.new("TextLabel")
 HotkeyList.Name = "HotkeyList"
@@ -693,22 +710,22 @@ HotkeyList.Position = UDim2.new(0, 15, 0, 40)
 HotkeyList.Size = UDim2.new(0, 300, 0, 150)
 HotkeyList.Font = Enum.Font.Code
 HotkeyList.Text = ""
-HotkeyList.TextColor3 = shared.Zero.General['Show Hotkeys']['Feature Color']
+HotkeyList.TextColor3 = Config.General['Show Hotkeys']['Feature Color']
 HotkeyList.TextSize = 12
 HotkeyList.TextXAlignment = Enum.TextXAlignment.Left
 HotkeyList.TextYAlignment = Enum.TextYAlignment.Top
-HotkeyList.Visible = shared.Zero.General['Show Hotkeys'].Enabled
+HotkeyList.Visible = Config.General['Show Hotkeys'].Enabled
 
 local function UpdateHotkeyHUD()
-    if not shared.Zero.General['Show Hotkeys'].Enabled then
+    if not Config.General['Show Hotkeys'].Enabled then
         HotkeyList.Visible = false
         WatermarkLabel.Visible = false
         return
     end
     WatermarkLabel.Visible = true
     HotkeyList.Visible = true
-    local text = "--- [ ZERO BINDS ] ---\n"
-    for name, bind in pairs(shared.Zero.General.Binds) do
+    local text = "--- [ ZERO.XYZ BINDS ] ---\n"
+    for name, bind in pairs(Config.General.Binds) do
         text = text .. string.format("[%s] : %s\n", string.upper(bind), name)
     end
     if CurrentTarget then
@@ -728,7 +745,7 @@ UpdateHotkeyHUD()
 RunService.RenderStepped:Connect(function()
     -- Silent Aim FOV Circle Visualizer
     if FOVCircle then
-        local fovConfig = shared.Zero['Silent Aim'].FOV
+        local fovConfig = Config['Silent Aim'].FOV
         if fovConfig.Enabled and fovConfig.Visible then
             FOVCircle.Visible = true
             FOVCircle.Radius = fovConfig.Scan
@@ -739,21 +756,21 @@ RunService.RenderStepped:Connect(function()
     end
 
     -- Aim Assist Smooth Camera Lerp
-    if shared.Zero['Aim Assist'].Enabled and AimAssistLocked and CurrentTarget and CurrentTarget.Character then
-        local hitPartName = shared.Zero['Aim Assist']['Hit Part']
+    if Config['Aim Assist'].Enabled and AimAssistLocked and CurrentTarget and CurrentTarget.Character then
+        local hitPartName = Config['Aim Assist']['Hit Part']
         local part = CurrentTarget.Character:FindFirstChild(hitPartName) or CurrentTarget.Character:FindFirstChild("HumanoidRootPart")
         if part then
-            local predPos = CalculatePredictedPosition(part, shared.Zero['Aim Assist'].Prediction)
+            local predPos = CalculatePredictedPosition(part, Config['Aim Assist'].Prediction)
             local currentCF = Camera.CFrame
             local targetCF = CFrame.new(currentCF.Position, predPos)
-            local smoothness = math.clamp(1 - shared.Zero['Aim Assist'].Smoothness, 0.01, 1)
+            local smoothness = math.clamp(1 - Config['Aim Assist'].Smoothness, 0.01, 1)
             Camera.CFrame = currentCF:Lerp(targetCF, smoothness)
         end
     end
 
     -- Target Line Tracer
     if TargetLine then
-        local lineConfig = shared.Zero['Silent Aim']['Target Line']
+        local lineConfig = Config['Silent Aim']['Target Line']
         if lineConfig.Enabled and CurrentTarget and CurrentTarget.Character then
             local part = CurrentTarget.Character:FindFirstChild("HumanoidRootPart")
             if part then
@@ -781,7 +798,7 @@ end)
 task.spawn(function()
     while true do
         task.wait(0.05)
-        if shared.Zero['Trigger Bot'].Enabled and TriggerBotActive then
+        if Config['Trigger Bot'].Enabled and TriggerBotActive then
             local target = Mouse.Target
             if target and target.Parent then
                 local player = Players:GetPlayerFromCharacter(target.Parent) or Players:GetPlayerFromCharacter(target.Parent.Parent)
@@ -797,7 +814,7 @@ task.spawn(function()
 end)
 
 ----------------------------------------------------------------------------------------
--- UNDETECTED MOVEMENT ENGINE (CFrame & Physics Step, NO BodyMovers)
+-- UNDETECTED MOVEMENT ENGINE (CFrame & Velocity Step)
 ----------------------------------------------------------------------------------------
 RunService.Heartbeat:Connect(function(dt)
     local char = LocalPlayer.Character
@@ -805,20 +822,20 @@ RunService.Heartbeat:Connect(function(dt)
     local hum = char:FindFirstChildOfClass("Humanoid")
     local hrp = char:FindFirstChild("HumanoidRootPart")
 
-    -- 1. Anti Trip
-    if shared.Zero['Player Modifications']['Anti Trip'] and hum then
+    -- Anti Trip
+    if Config['Player Modifications']['Anti Trip'] and hum then
         hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
         hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
     end
 
-    -- 2. UD WalkSpeed via Velocity direction (leaves WalkSpeed property clean)
-    if shared.Zero['Player Modifications'].Speed.Enabled and hum and hrp then
-        local desiredSpeed = shared.Zero['Player Modifications'].Speed.Default.Value
+    -- UD WalkSpeed via Velocity direction (leaves WalkSpeed property completely clean)
+    if Config['Player Modifications'].Speed.Enabled and hum and hrp then
+        local desiredSpeed = Config['Player Modifications'].Speed.Default.Value
         local bodyEffects = char:FindFirstChild("BodyEffects")
         if bodyEffects and bodyEffects:FindFirstChild("Reload") and bodyEffects.Reload.Value == true then
-            desiredSpeed = shared.Zero['Player Modifications'].Speed.Reloading.Value
+            desiredSpeed = Config['Player Modifications'].Speed.Reloading.Value
         elseif hum.Health < 30 then
-            desiredSpeed = shared.Zero['Player Modifications'].Speed['Low Health'].Value
+            desiredSpeed = Config['Player Modifications'].Speed['Low Health'].Value
         end
 
         local moveDir = hum.MoveDirection
@@ -827,14 +844,14 @@ RunService.Heartbeat:Connect(function(dt)
         end
     end
 
-    -- 3. Jump Power
-    if shared.Zero['Player Modifications']['Jump Power'].Enabled and hum then
-        hum.JumpPower = shared.Zero['Player Modifications']['Jump Power'].Value
+    -- Jump Power
+    if Config['Player Modifications']['Jump Power'].Enabled and hum then
+        hum.JumpPower = Config['Player Modifications']['Jump Power'].Value
     end
 
-    -- 4. UD Flight (CFrame step translation - zero BodyMovers detected by CHECKER_1)
+    -- UD Flight (CFrame step translation - zero BodyMovers detected)
     if FlyingActive and hrp then
-        local flySpeed = shared.Zero['Player Modifications'].Flying.Speed
+        local flySpeed = Config['Player Modifications'].Flying.Speed
         local move = Vector3.zero
         if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + Camera.CFrame.LookVector end
         if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - Camera.CFrame.LookVector end
@@ -852,7 +869,7 @@ end)
 
 -- Anti Jump Cooldown
 UserInputService.JumpRequest:Connect(function()
-    if shared.Zero['Player Modifications']['Anti Jump Cooldown'].Enabled then
+    if Config['Player Modifications']['Anti Jump Cooldown'].Enabled then
         local char = LocalPlayer.Character
         local hum = char and char:FindFirstChildOfClass("Humanoid")
         if hum then
@@ -865,7 +882,7 @@ end)
 local function SortInventory()
     local backpack = LocalPlayer:FindFirstChild("Backpack")
     if not backpack then return end
-    local order = shared.Zero['Inventory Sorter'].Order
+    local order = Config['Inventory Sorter'].Order
     for _, toolName in ipairs(order) do
         local tool = backpack:FindFirstChild(toolName)
         if tool then
@@ -890,12 +907,12 @@ local function CreateESP(player)
     }
     box.Box.Thickness = 1.5
     box.Box.Filled = false
-    box.Box.Color = shared.Zero.Visualization['Global ESP'].Drawing.Boxes.Corner.Color
+    box.Box.Color = Config.Visualization['Global ESP'].Drawing.Boxes.Corner.Color
 
-    box.Name.Size = shared.Zero.Visualization['Global ESP']['Text Size']
+    box.Name.Size = Config.Visualization['Global ESP']['Text Size']
     box.Name.Center = true
     box.Name.Outline = true
-    box.Name.Color = shared.Zero.Visualization['Global ESP'].Drawing.Names.Color
+    box.Name.Color = Config.Visualization['Global ESP'].Drawing.Names.Color
 
     box.Health.Thickness = 2
     box.Health.Color = Color3.fromRGB(0, 255, 0)
@@ -921,7 +938,7 @@ Players.PlayerRemoving:Connect(function(p)
 end)
 
 RunService.RenderStepped:Connect(function()
-    local espEnabled = shared.Zero.Visualization['Global ESP'].Enabled or shared.Zero.ESP.Enabled
+    local espEnabled = Config.Visualization['Global ESP'].Enabled or Config.ESP.Enabled
     for player, esp in pairs(ESPBoxes) do
         if espEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChildOfClass("Humanoid") then
             local char = player.Character
@@ -973,7 +990,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
 
     local key = input.KeyCode.Name:lower()
-    local binds = shared.Zero.General.Binds
+    local binds = Config.General.Binds
 
     -- Aim Assist Target Toggle
     if key == binds['Aim Bot Target']:lower() then
@@ -1002,12 +1019,12 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 
     -- WalkSpeed Toggle
     if key == binds['Walk Speed']:lower() then
-        shared.Zero['Player Modifications'].Speed.Enabled = not shared.Zero['Player Modifications'].Speed.Enabled
+        Config['Player Modifications'].Speed.Enabled = not Config['Player Modifications'].Speed.Enabled
     end
 
     -- Jump Power Toggle
     if key == binds['Jump Power']:lower() then
-        shared.Zero['Player Modifications']['Jump Power'].Enabled = not shared.Zero['Player Modifications']['Jump Power'].Enabled
+        Config['Player Modifications']['Jump Power'].Enabled = not Config['Player Modifications']['Jump Power'].Enabled
     end
 
     -- Fly Toggle
@@ -1017,8 +1034,8 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 
     -- ESP Toggle
     if key == binds['ESP']:lower() then
-        shared.Zero.ESP.Enabled = not shared.Zero.ESP.Enabled
-        shared.Zero.Visualization['Global ESP'].Enabled = shared.Zero.ESP.Enabled
+        Config.ESP.Enabled = not Config.ESP.Enabled
+        Config.Visualization['Global ESP'].Enabled = Config.ESP.Enabled
     end
 
     -- Inventory Sorter
@@ -1030,10 +1047,10 @@ end)
 UserInputService.InputEnded:Connect(function(input, gameProcessed)
     if input.UserInputType == Enum.UserInputType.Keyboard then
         local key = input.KeyCode.Name:lower()
-        if key == shared.Zero.General.Binds['Trigger Bot']:lower() then
+        if key == Config.General.Binds['Trigger Bot']:lower() then
             TriggerBotActive = false
         end
     end
 end)
 
-print("[ZERO .CLUB] Da Hood Suite loaded successfully - 100% Undetected!")
+print("[ZERO.XYZ] Da Hood Suite loaded successfully — 100% Undetected!")
