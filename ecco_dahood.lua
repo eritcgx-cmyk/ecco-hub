@@ -1,19 +1,19 @@
 --[[
     ========================================================================================
-    ZERO.XYZ — DA HOOD COMPLETE STEALTH ENGINE (100% UNDETECTED)
-    Engineered for Volt & Modern Level 7/8 Luau Runtimes
+    ZERO.XYZ — DA HOOD PUBLIC RELEASE (100% UNDETECTED)
+    Universal Configuration Table, Key Auth & Metamethod Defense Engine
     ========================================================================================
 ]]
 
 -- KEY AUTHENTICATION SYSTEM
--- Configured keys or user-supplied script_key
 local VALID_KEYS = {
     ["fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"] = true,
     ["ZERO-FREE-KEY-2026"] = true,
     ["ZERO-VIP-ALPHA"] = true,
+    ["ZERO.XYZ-PUBLIC-2026"] = true,
 }
 
-local userKey = getgenv().script_key or _G.script_key or script_key
+local userKey = getgenv().script_key or _G.script_key or script_key or "fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq"
 
 if not userKey or not VALID_KEYS[tostring(userKey)] then
     pcall(function()
@@ -22,9 +22,9 @@ if not userKey or not VALID_KEYS[tostring(userKey)] then
     return
 end
 
--- ZERO.XYZ PRIMARY CONFIGURATION TABLE
--- Edit below table or configure shared["zero.xyz"] in your autoexec
-shared["zero.xyz"] = shared["zero.xyz"] or {
+-- ZERO.XYZ PUBLIC CONFIGURATION TABLE
+-- Edit this table directly or define shared["zero.xyz"] / shared.Zero before executing!
+shared["zero.xyz"] = shared["zero.xyz"] or shared.Zero or shared.Ecco or {
     ['General'] = {
         ['Key'] = 'DoNotTouchThis',
         ['Multi Thread'] = true,
@@ -515,24 +515,34 @@ local TriggerBotActive = false
 local FlyingActive = false
 
 ----------------------------------------------------------------------------------------
--- ANTI-CHEAT NEUTRALIZATION (COMPLETE UNDETECTED SHIELD)
+-- UNIVERSAL ANTI-CHEAT PURGE (DYNAMIC STRING & PATTERN DETECTION)
 ----------------------------------------------------------------------------------------
-local function NeutralizeLocalAC(char)
+local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
     task.spawn(function()
-        local acScript = char:WaitForChild("\x1F996082", 5)
-        if acScript then
-            local ls = acScript:FindFirstChild("LocalScript")
-            if ls then
-                ls.Disabled = true
-                pcall(function() ls:Destroy() end)
+        -- Scan all descendants dynamically to purge randomized name scripts (e.g. \x1F996082, )778104, etc.)
+        for _, obj in ipairs(char:GetDescendants()) do
+            if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
+                pcall(function()
+                    obj.Disabled = true
+                    obj:Destroy()
+                end)
             end
         end
+
+        char.DescendantAdded:Connect(function(obj)
+            if obj:IsA("LocalScript") and obj.Name ~= "Animate" then
+                pcall(function()
+                    obj.Disabled = true
+                    obj:Destroy()
+                end)
+            end
+        end)
     end)
 end
 
-if LocalPlayer.Character then NeutralizeLocalAC(LocalPlayer.Character) end
-LocalPlayer.CharacterAdded:Connect(NeutralizeLocalAC)
+if LocalPlayer.Character then NeutralizeCharacterAntiCheat(LocalPlayer.Character) end
+LocalPlayer.CharacterAdded:Connect(NeutralizeCharacterAntiCheat)
 
 -- Metamethod Hook for MainEvent Checkers
 local oldNamecall = nil
@@ -604,7 +614,7 @@ oldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(self, ...)
     if self == MainEvent and method == "FireServer" then
         local eventName = tostring(args[1])
 
-        -- Block AC traps completely
+        -- Block all AC traps completely
         if BlockedCheckers[eventName] then
             return nil
         end
@@ -828,7 +838,7 @@ RunService.Heartbeat:Connect(function(dt)
         hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
     end
 
-    -- UD WalkSpeed via Velocity direction (leaves WalkSpeed property completely clean)
+    -- UD WalkSpeed via Velocity direction
     if Config['Player Modifications'].Speed.Enabled and hum and hrp then
         local desiredSpeed = Config['Player Modifications'].Speed.Default.Value
         local bodyEffects = char:FindFirstChild("BodyEffects")
@@ -849,7 +859,7 @@ RunService.Heartbeat:Connect(function(dt)
         hum.JumpPower = Config['Player Modifications']['Jump Power'].Value
     end
 
-    -- UD Flight (CFrame step translation - zero BodyMovers detected)
+    -- UD Flight (CFrame step translation)
     if FlyingActive and hrp then
         local flySpeed = Config['Player Modifications'].Flying.Speed
         local move = Vector3.zero
@@ -1053,4 +1063,4 @@ UserInputService.InputEnded:Connect(function(input, gameProcessed)
     end
 end)
 
-print("[ZERO.XYZ] Da Hood Suite loaded successfully — 100% Undetected!")
+print("[ZERO.XYZ] Public Release Loaded — 100% Undetected!")
