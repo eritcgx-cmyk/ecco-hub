@@ -5,131 +5,481 @@
     ========================================================================================
 ]]
 
--- PUBLIC CONFIGURATION TABLE (CUSTOMIZE EVERYTHING HERE)
-script_key = "fIVgmgQPZfFpMHqACfhOTlMLqOwmsksq";
+-- INHERIT PRE-CONFIGURED TABLE OR INITIALIZE ZERO CONFIG
+local Config = shared.Zero or shared["zero.xyz"] or shared.Ecco
 
-shared.Zero = {
-    ['General'] = {
-        ['Key'] = 'DoNotTouchThis',
-        ['Multi Thread'] = true,
+if not Config then
+    Config = {
+        ['General'] = {
+            ['Key'] = 'DoNotTouchThis',
+            ['Multi Thread'] = true,
 
-        ['Binds'] = {
-            ['Aim Bot Target']     = 'l',
-            ['Trigger Bot']        = 'l',
-            ['Trigger Bot Target'] = 'k',
-            ['Silent Aim Target']  = 'C',
-            ['Inventory Sorter']   = 'B',
-            ['Walk Speed']         = 'Z',
-            ['ESP']                = 'J',
-            ['Jump Power']         = 'P',
-            ['Anti Future']        = 'X',
-            ['Panic']              = 'X',
-            ['Tryouts']            = 'O',
-            ['Fly']                = 'V',
+            ['Binds'] = {
+                ['Aim Bot Target']     = 'l',
+                ['Trigger Bot']        = 'l',
+                ['Trigger Bot Target'] = 'k',
+                ['Silent Aim Target']  = 'C',
+                ['Inventory Sorter']   = 'B',
+                ['Walk Speed']         = 'Z',
+                ['ESP']                = 'J',
+                ['Jump Power']         = 'P',
+                ['Anti Future']        = 'X',
+                ['Panic']              = 'X',
+                ['Tryouts']            = 'O',
+                ['Fly']                = 'V',
+            },
+
+            ['Show Hotkeys'] = {
+                ['Enabled']         = true,
+                ['Brand Color']     = Color3.fromRGB(0, 230, 255),
+                ['Feature Color']   = Color3.fromRGB(255, 255, 255),
+                ['Target Color']    = Color3.fromRGB(100, 255, 100),
+                ['Watermark']       = 'zero.xyz | stealth engine',
+                ['Watermark Color'] = Color3.fromRGB(0, 230, 255),
+            },
+
+            ['Checks'] = {
+                ['Visible']     = false,
+                ['Knocked']     = true,
+                ['Grabbed']     = true,
+                ['Equipped']    = false,
+                ['Forcefield']  = true,
+            },
         },
 
-        ['Show Hotkeys'] = {
-            ['Enabled']         = true,
-            ['Brand Color']     = Color3.fromRGB(0, 230, 255),
-            ['Feature Color']   = Color3.fromRGB(255, 255, 255),
-            ['Target Color']    = Color3.fromRGB(100, 255, 100),
-            ['Watermark']       = 'zero.xyz | stealth engine',
-            ['Watermark Color'] = Color3.fromRGB(0, 230, 255),
-        },
-
-        ['Checks'] = {
-            ['Visible']     = false, -- Wallbang enabled (does not require line of sight)
-            ['Knocked']     = true,  -- Ignore knocked players
-            ['Grabbed']     = true,  -- Ignore grabbed players
-            ['Equipped']    = false,
-            ['Forcefield']  = true,  -- Ignore spawn protection forcefields
-        },
-    },
-
-    ['Aim Assist'] = {
-        ['Enabled']    = true,
-        ['Distance']   = 1500,
-        ['Smoothness'] = 0.850,
-        ['Mode']       = 'Toggle',
-        ['Hit Part']   = 'HumanoidRootPart',
-        ['Prediction'] = { ['X'] = 0.135, ['Y'] = 0.135, ['Z'] = 0.135 },
-    },
-
-    ['Silent Aim'] = {
-        ['Enabled']            = true,
-        ['Distance']           = 10000,
-        ['Visual Redirection'] = true,
-        ['Hit Part']           = 'Head',
-        ['Prediction']         = { ['X'] = 0.138, ['Y'] = 0.138, ['Z'] = 0.138 },
-        ['Target Line'] = {
-            ['Enabled'] = true,
-            ['Regular'] = Color3.fromRGB(0, 230, 255),
-            ['In FOV']  = Color3.fromRGB(255, 50, 50),
-        },
-        ['FOV'] = {
-            ['Enabled'] = true,
-            ['Visible'] = true,
-            ['Scan']    = 600, -- Expanded FOV for instant detection
-        },
-    },
-
-    ['Trigger Bot'] = {
-        ['Enabled']  = false,
-        ['Distance'] = 1000,
-        ['Hit Part'] = { ['Enabled'] = true, ['Part'] = 'HumanoidRootPart' },
-    },
-
-    ['Player Modifications'] = {
-        ['Anti Trip']  = true,
-        ['Anti Stomp'] = true,
-
-        ['Speed'] = {
+        ['Aim Assist'] = {
             ['Enabled']    = true,
-            ['Low Health'] = { ['Value'] = 75 },
-            ['Reloading']  = { ['Value'] = 65 },
-            ['Default']    = { ['Value'] = 75 },
+            ['Distance']   = 1500,
+            ['Smoothness'] = 0.850,
+            ['Mode']       = 'Toggle',
+
+            ['Easing'] = {
+                ['Style']     = 'Sine',
+                ['Direction'] = 'InOut',
+            },
+
+            ['Hit Part'] = 'HumanoidRootPart',
+            ['Closest Point'] = {
+                ['Mode']  = 'Regular',
+                ['Scale'] = 40,
+            },
+
+            ['Prediction'] = {
+                ['X'] = 0.135,
+                ['Y'] = 0.135,
+                ['Z'] = 0.135,
+                ['Clamp Y Axis'] = {
+                    ['Override'] = 'Partial',
+                },
+            },
         },
 
-        ['Jump Power'] = {
+        ['Silent Aim'] = {
+            ['Enabled']            = true,
+            ['Distance']           = 10000,
+            ['Visual Redirection'] = true,
+
+            ['Anti Curve'] = {
+                ['Enabled']   = true,
+                ['Visualize'] = true,
+                ['Max Angle'] = 25,
+            },
+
+            ['Hit Part'] = 'Head',
+            ['Closest Point'] = {
+                ['Mode']  = 'Regular',
+                ['Scale'] = 95,
+            },
+
+            ['Prediction'] = {
+                ['X'] = 0.138,
+                ['Y'] = 0.138,
+                ['Z'] = 0.138,
+                ['Y Axis'] = {
+                    ['Override'] = 'Full',
+                },
+            },
+
+            ['Target Line'] = {
+                ['Enabled'] = true,
+                ['Regular'] = Color3.fromRGB(0, 230, 255),
+                ['In FOV']  = Color3.fromRGB(255, 50, 50),
+            },
+
+            ['FOV'] = {
+                ['Enabled'] = true,
+                ['Visible'] = true,
+                ['Scan']    = 600,
+                ['Method']  = 'Automatic',
+                ['Ignore']  = true,
+                ['Mode'] = {
+                    ['Type'] = 'Circle',
+                    ['Mode'] = 'Circle',
+                    ['Size'] = {
+                        ['Circle']  = 600,
+                        ['2D_Box']  = {100, 100},
+                        ['3D_Box']  = {2, 2, 2},
+                    },
+                },
+            },
+        },
+
+        ['Trigger Bot'] = {
+            ['Enabled']  = false,
+            ['Mode']     = 'Hitbox',
+            ['Distance'] = 1000,
+            ['Cooldown'] = 0,
+
+            ['Activation'] = {
+                ['Mode'] = 'Keybind',
+                ['Type'] = 'Hold',
+            },
+
+            ['Hit Part'] = {
+                ['Enabled'] = true,
+                ['Part']    = 'HumanoidRootPart',
+            },
+
+            ['Prediction'] = {
+                ['X'] = 0.135,
+                ['Y'] = 0.135,
+                ['Z'] = 0.135,
+            },
+
+            ['FOV'] = {
+                ['Enabled'] = true,
+                ['Visible'] = false,
+                ['Scan']    = math.huge,
+                ['Sync']    = false,
+                ['2D_Box']  = {50, 50},
+            },
+        },
+
+        ['Player Modifications'] = {
+            ['Anti Trip']  = true,
+            ['Anti Stomp'] = false,
+
+            ['Speed'] = {
+                ['Enabled']    = false,
+                ['Low Health'] = {['Value'] = 75},
+                ['Reloading']  = {['Value'] = 65},
+                ['Default']    = {['Value'] = 75},
+            },
+
+            ['Jump Power'] = {
+                ['Enabled'] = false,
+                ['Value']   = 50,
+            },
+
+            ['Flying'] = {
+                ['Enabled'] = false,
+                ['Speed']   = 110,
+            },
+
+            ['Anti Jump Cooldown'] = {
+                ['Enabled'] = true,
+            },
+
+            ['Panic Ground'] = {
+                ['Enabled'] = false,
+            },
+
+            ['Wall Hop'] = {
+                ['Enabled']        = true, 
+                ['Jump Strength']  = 50,
+                ['Knife Strength'] = 60,
+            },
+        },
+
+        ['Weapon Modifications'] = {
+            ['Spread Changer'] = {
+                ['Enabled']            = true,
+                ['[Double-Barrel SG]'] = {['Value'] = 0.7},
+                ['[TacticalShotgun]']  = {['Value'] = 0.7},
+                ['[Shotgun]']          = {['Value'] = 0.7},
+            },
+
+            ['Double Tap'] = {
+                ['Enabled']    = false,
+                ['[Revolver]'] = {['Value'] = true},
+                ['[Silencer]'] = {['Value'] = false},
+                ['[Glock]']    = {['Value'] = false},
+            },
+
+            ['Delay Changer'] = {
+                ['Enabled']            = false,
+                ['[Double-Barrel SG]'] = {['Value'] = 0.22},
+                ['[TacticalShotgun]']  = {['Value'] = 0.18},
+                ['[Revolver]']         = {['Value'] = 0.1},
+                ['[Deagle]']           = {['Value'] = 0.1},
+            },
+        },
+
+        ['Weapon Override'] = {
+            ['Enabled'] = true,
+            ['Weapons'] = {
+                ['[Double-Barrel SG]'] = { 'Full' },
+                ['[Revolver]']         = { 'Full' },
+                ['[TacticalShotgun]']  = { 'Full' },
+                ['[LMG]']              = { 'Full' },
+            },
+        },
+
+        ['Inventory Sorter'] = {
+            ['Enabled'] = true,
+            ['Order'] = {
+                '[Double-Barrel SG]',
+                '[Revolver]',
+                '[TacticalShotgun]',
+                '[Knife]',
+            },
+        },
+
+        ['Rage Mode'] = {
+            ['Enabled']     = false,
+            ['Mode']        = 'Rabbit',
+            ['Visualize']   = false,
+            ['Full Damage'] = false,
+        },
+
+        ['Hitbox Expander'] = {
+            ['Enabled'] = true,
+            ['Size']    = 24,
+            ['Link']    = false,
+        },
+
+        ['Future'] = {
+            ['Enabled'] = true,
+            ['Flow']    = 12,
+            ['Sanity']  = 2,
+            ['Bait']    = 12,
+        },
+
+        ['Hood Customs'] = {
+            ['Force Hit'] = true,
+            ['Cooldown']  = 0.05,
+        },
+
+        ['ESP'] = {
             ['Enabled'] = false,
-            ['Value']   = 85,
+            ['Nametag'] = false,
+            ['Normal']  = Color3.fromRGB(255, 255, 255),
+            ['Target']  = Color3.fromRGB(255, 100, 100),
         },
 
-        ['Flying'] = {
-            ['Enabled'] = false,
-            ['Speed']   = 110,
+        ['Visualization'] = {
+            ['Load Check'] = false,
+            ['Global ESP'] = {
+                ['Enabled']           = false,
+                ['Team Check']        = false,
+                ['Max Draw Distance'] = math.huge,
+                ['Text Size']         = 13,
+                ['Text Font']         = 'Smallest Pixel',
+                ['Fade Effect'] = {
+                    ['On Distance'] = false,
+                },
+                ['Drawing'] = {
+                    ['Names'] = {
+                        ['Enabled'] = false,
+                        ['Color']   = Color3.fromRGB(227, 180, 206),
+                    },
+                    ['Distance'] = {
+                        ['Enabled'] = false,
+                        ['Docked']  = true,
+                        ['Color']   = Color3.fromRGB(175, 194, 223),
+                    },
+                    ['Health'] = {
+                        ['Enabled']        = false,
+                        ['Text']           = false,
+                        ['Position']       = 'Left',
+                        ['Health Based']   = false,
+                        ['Text Color']     = Color3.fromRGB(195, 193, 239),
+                        ['Width']          = 1.5,
+                        ['Gradient']       = true,
+                        ['Alpha Color']    = Color3.fromRGB(189, 185, 235),
+                        ['Depth Color']    = Color3.fromRGB(239, 193, 193),
+                        ['Color Keypoint'] = Color3.fromRGB(202, 219, 247),
+                    },
+                    ['Boxes'] = {
+                        ['Enabled']  = false,
+                        ['Box Type'] = 'Corner',
+                        ['Bounding Box'] = {
+                            ['Animate']            = false,
+                            ['Animate Speed']      = 360,
+                            ['Gradient']           = false,
+                            ['Alpha Color']        = Color3.fromRGB(205, 160, 227),
+                            ['Depth Color']        = Color3.fromRGB(204, 177, 188),
+                            ['Filled Color Scheme'] = false,
+                            ['Fill Color']         = Color3.fromRGB(204, 244, 215),
+                            ['Fill Glow']          = Color3.fromRGB(226, 191, 188),
+                            ['Filled'] = {
+                                ['Enabled']      = false,
+                                ['Transparency'] = 0.75,
+                                ['Color']        = Color3.fromRGB(193, 177, 214),
+                            },
+                        },
+                        ['Corner'] = {
+                            ['Color'] = Color3.fromRGB(226, 181, 181),
+                        },
+                    },
+                },
+            },
+            ['Crosshair'] = {
+                ['Visible']        = false,
+                ['Stutter']        = 0,
+                ['Docked']         = false,
+                ['Width']          = 1.5,
+                ['Length']         = 15,
+                ['Radius']         = 5,
+                ['Color']          = Color3.fromRGB(180, 207, 227),
+                ['Rotate']         = true,
+                ['Rotate Speed']   = 150,
+                ['Max Angle']      = 360,
+                ['Lerp Style']     = Enum.EasingStyle.Linear,
+                ['Fluctuate']      = true,
+                ['Fluctuate Speed'] = 150,
+                ['Fluctuate Min']  = 5,
+                ['Fluctuate Max']  = 22,
+                ['Labels'] = {
+                    ['Name'] = {
+                        ['Visible'] = false,
+                        ['Text']    = 'ZERO',
+                        ['Color']   = Color3.fromRGB(180, 207, 227),
+                    },
+                    ['Extension'] = {
+                        ['Visible'] = false,
+                        ['Text']    = '.XYZ',
+                        ['Color']   = Color3.fromRGB(180, 207, 227),
+                    },
+                    ['Current Target'] = {
+                        ['Visible'] = false,
+                        ['Color']   = Color3.fromRGB(255, 255, 255),
+                    },
+                    ['Current Target Health'] = {
+                        ['Visible'] = false,
+                        ['Color']   = Color3.fromRGB(165, 255, 191),
+                    },
+                },
+            },
         },
 
-        ['Anti Jump Cooldown'] = { ['Enabled'] = true },
-    },
-
-    ['Hitbox Expander'] = {
-        ['Enabled'] = true,
-        ['Size']    = 24,
-    },
-
-    ['Weapon Modifications'] = {
-        ['Delay Changer'] = {
-            ['Enabled']            = false,
-            ['[Double-Barrel SG]'] = { ['Value'] = 0.22 },
-            ['[TacticalShotgun]']  = { ['Value'] = 0.18 },
-            ['[Revolver]']         = { ['Value'] = 0.1 },
-            ['[Deagle]']           = { ['Value'] = 0.1 },
+        ['Skin Modifications'] = {
+            ['Da Hood']      = true,
+            ['Dee Hood']     = false,
+            ['Hood Customs'] = false,
+            ['Unlock All']   = true,
+            ['Selected Weapons'] = {
+                ['[Revolver]']         = 'Golden Age',
+                ['[Double-Barrel SG]'] = 'Galaxy',
+                ['[TacticalShotgun]']  = 'Luck',
+                ['[Knife]']            = 'Golden Age Tanto',
+            },
         },
-    },
 
-    ['ESP'] = {
-        ['Enabled'] = true,
-        ['Nametag'] = true,
-    },
-}
+        ['Da Hood'] = {
+            ['Armor Aura'] = {
+                ['Enabled']  = false,
+                ['Distance'] = 100,
+            },
+            ['Wall Bang'] = {
+                ['Enabled']  = true,
+                ['Distance'] = 200,
+                ['Hit Part'] = 'HumanoidRootPart',
+            },
+        },
 
--- Backward compatibility aliases
-shared.Ecco = shared.Zero
-shared["zero.xyz"] = shared.Zero
+        ['Das Hood'] = {
+            ['Infinite Range'] = {
+                ['Enabled'] = true,
+                ['Range']   = 10e10,
+            },
+        },
+
+        ['Des Hood'] = {
+            ['Wall Bang']      = {['Enabled'] = true},
+            ['Infinite Range'] = {['Enabled'] = true, ['Range'] = 9e9},
+        },
+
+        ['Der Hood'] = {
+            ['Wall Bang']      = {['Enabled'] = true},
+            ['Infinite Range'] = {['Enabled'] = true, ['Range'] = 9e9},
+        },
+
+        ['Safety Mode'] = {
+            ['Enabled']     = false,
+            ['Crew Mode']   = false,
+            ['Friend Mode'] = false,
+            ['Crew ID']     = 4705120,
+            ['Tryouts Mode'] = {
+                ['Enabled'] = false,
+            },
+            ['Report Detector'] = {
+                ['Enabled']     = true,
+                ['Auto Kick']   = true,
+                ['Report Back'] = true,
+            },
+        },
+
+        ['Anti Future'] = {
+            ['Enabled']      = true,
+            ['Visible']      = false,
+            ['Detection']    = 27,
+            ['Still']        = false,
+            ['Above']        = true,
+            ['Above Height'] = 36,
+            ['Behind']       = true,
+            ['Color']        = {255, 255, 255, Rainbow = false},
+        },
+
+        ['Character Spoofing'] = {
+            ['Body Spoofer'] = {
+                ['Enabled']    = false,
+                ['Memory']     = false,
+                ['Korblox']    = false,
+                ['Headless']   = false,
+                ['Animations'] = false,
+            },
+            ['Hat Spoofer'] = {
+                ['Enabled']        = false,
+                ['Apply Respawn']  = true,
+                ['Remove Active']  = false,
+                ['List']           = {89171071, 172309919, 187848395, 398674411},
+            },
+            ['Avatar Spoofer'] = {
+                ['Enabled']       = false,
+                ['Apply Respawn'] = true,
+                ['User']          = '665640628',
+                ['Copy Emotes']   = true,
+                ['Morph Spoofer'] = {
+                    ['Enabled'] = false,
+                    ['Mode']    = 'Default',
+                },
+                ['Animation Spoofer'] = {
+                    ['Enabled'] = false,
+                    ['Animations'] = {
+                        ['Idle'] = 'Zombie',
+                        ['Jump'] = 'Ninja',
+                        ['Walk'] = 'Zombie',
+                        ['Run']  = 'Zombie',
+                        ['Fall'] = 'Ninja',
+                    },
+                },
+            },
+            ['Interface Spoofer'] = {
+                ['Enabled'] = false,
+                ['User']    = '10400567910',
+            },
+        },
+    }
+end
+
+-- Synchronize global handles
+shared.Zero = Config
+shared["zero.xyz"] = Config
+shared.Ecco = Config
 
 ----------------------------------------------------------------------------------------
--- CLEANUP PREVIOUS INSTANCES
+-- CLEANUP PREVIOUS SCRIPT INSTANCES
 ----------------------------------------------------------------------------------------
 pcall(function()
     if gethui then
@@ -164,8 +514,6 @@ if not userKey or not VALID_KEYS[tostring(userKey)] then
     return
 end
 
-local Config = shared.Zero
-
 ----------------------------------------------------------------------------------------
 -- CORE DEPENDENCIES
 ----------------------------------------------------------------------------------------
@@ -198,7 +546,7 @@ local function Notify(title, message, duration)
 end
 
 ----------------------------------------------------------------------------------------
--- SAFE DA HOOD ANTI-CHEAT NEUTRALIZATION (NEVER TOUCHES TOOLS OR GUNCLIENT)
+-- SAFE DA HOOD ANTI-CHEAT NEUTRALIZATION (PRESERVES WEAPON AND TOOL SCRIPTS)
 ----------------------------------------------------------------------------------------
 local function NeutralizeCharacterAntiCheat(char)
     if not char then return end
@@ -279,7 +627,6 @@ local function GetClosestTargetToMouse(maxRadius)
                         chosenPlayer = player
                     end
                 elseif not chosenPlayer and shortestDist == (maxRadius or math.huge) then
-                    -- Fallback to nearest world target if none on screen
                     chosenPlayer = player
                 end
             end
@@ -710,7 +1057,7 @@ Players.PlayerRemoving:Connect(function(p)
 end)
 
 RunService.RenderStepped:Connect(function()
-    local espEnabled = Config.ESP.Enabled
+    local espEnabled = Config.ESP and Config.ESP.Enabled
     for player, esp in pairs(ESPBoxes) do
         if espEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChildOfClass("Humanoid") then
             local char = player.Character
